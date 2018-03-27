@@ -9,7 +9,7 @@ _describe project_
 
 ### Corpus.py
 Handles .cha (or other ? or nothing at all, just clean ortho file ? or just tags.txt ?)
-Can (or can't) phonologize and syllabify (which languages ? -none for now)
+Can (or can't) phonologize and syllabify (which languages ? -none for now, except for English some time soon)
 
 + Get nb of words, phones, syllables in corpus
 + Get nb of single word utterances
