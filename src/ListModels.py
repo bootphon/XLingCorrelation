@@ -48,3 +48,6 @@ class ListModels(object):
             for j in range(len(self._results[0])):
                 self._r2[i,j] = self._results[i,j].get_lin_reg()['r2_value']
         return
+
+    def get_r2(self):
+        return self._r2
