@@ -53,7 +53,7 @@ class Segmented(object):
         self._FN = 0 # to put in a new object ?
 
         self._eval = [] # will contain different f-score, precision and recall values #TODO
-        
+
         self.freq_top()
         self.freq_words()
 
@@ -113,7 +113,7 @@ class Segmented(object):
             # print(word)
             if word in self.dict_phono_ortho :
                 # print('found')
-                self._freq_words[word]=self._freq_top[word]
+                self._freq_words[self.dict_phono_ortho[word]]=self._freq_top[word]
 
         return self._freq_words
 

@@ -1,5 +1,6 @@
 import numpy as np
 import Model
+import Reports
 
 class ListModels(object):
     """
@@ -8,28 +9,32 @@ class ListModels(object):
         - list of reports [Reports.Reports]
 
     TODO add age ofc
+    TODO weird, in phono...
     """
 
-    def __init__(self, segmented_list, reports_list):
-
-        self._reports_list = reports_list
+    def __init__(self, segmented_list, reports):
+        # self._reports = reports
+        self._reports = reports
         self._segmented_list = segmented_list
 
 
-        self._results = np.empty([len(reports_list), len(segmented_list)], dtype = Model.Model) # array of models ? dict ?
-        self._r2 = np.empty([len(reports_list), len(segmented_list)], dtype = float)
+        self._results = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = Model.Model) # array of models ? dict ?
+        self._r2 = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
+
 
     def compute(self):
         """
         Add logistic afterwards !!! TODO
 
         """
-        for irep in range(len(self._reports_list)) :
-            reports = self._reports_list[irep]
+        for rep in self._reports.get_age_range() :
+            reports = self._reports.get_reports(rep)
+            irep = rep-self._reports.get_age_min()
+
             for iseg in range(len(self._segmented_list)) :
                 segmented = self._segmented_list[iseg]
                 # create corresponding model
-                self._results[irep, iseg] = Model.Model(segmented.get_freq_words(), reports.get_word_freq())
+                self._results[irep, iseg] = Model.Model(segmented.get_freq_words(), reports)
                 # compute correlation for this very model
                 self._results[irep, iseg].compute()
 

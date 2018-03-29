@@ -58,7 +58,9 @@ class Model(object):
             return
 
     def intersect(self):
-        return (pd.merge(self._corpus, self._reports, on='type', how='inner'))
+        res = pd.merge(self._corpus, self._reports, on='type', how='inner')
+        print(res.head(5))
+        return res
 
     def compute_linear(self):
         X = np.log(self._data['word_freq'])

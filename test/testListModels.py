@@ -8,10 +8,10 @@ seg1 = Segmented.Segmented(path+'Results/20k/dibs/syllable/segmented0.txt', path
 # seg1.freq_top()
 listseg = [seg1]
 
-rep1 = Reports.Reports(path+"CDI/english/Prop_WG_understands_8_18.csv")
-listrep = [rep1]
+rep = Reports.Reports(path+"CDI/english/Prop_WG_understands_8_18.csv")
 
-models = ListModels.ListModels(listseg, listrep)
+
+models = ListModels.ListModels(listseg, rep)
 
 models.compute()
 
