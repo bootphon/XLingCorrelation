@@ -34,6 +34,9 @@ class Segmented(object):
 
         self.dict_phono_ortho = {} #ok
 
+        self._unit = path_seg.strip('/')[-2]
+        self._algo = path_seg.strip('/')[-3]
+
         self._nb_words = 0 #ok
         self._words = defaultdict(int) #ok
 
@@ -50,6 +53,9 @@ class Segmented(object):
         self._FN = 0 # to put in a new object ?
 
         self._eval = [] # will contain different f-score, precision and recall values #TODO
+        
+        self.freq_top()
+        self.freq_words()
 
 
     def freq_top(self): #ok
@@ -85,6 +91,9 @@ class Segmented(object):
         f.close()
         return
 
+    def get_freq_top(self):
+        return self._freq_top
+
 
     def freq_words(self): #ok
         """
@@ -98,7 +107,7 @@ class Segmented(object):
         # 2. Using dictionary to transcribe well segmented words into ortho rpz #
         # May be improved to transcribe badly segmented words ? #TODO
 
-        print(self.dict_phono_ortho)
+        # print(self.dict_phono_ortho)
 
         for word in self._freq_top.keys():
             # print(word)
@@ -106,6 +115,9 @@ class Segmented(object):
                 # print('found')
                 self._freq_words[word]=self._freq_top[word]
 
+        return self._freq_words
+
+    def get_freq_words(self):
         return self._freq_words
 
     def write_freq_words(self, name): #TODO
