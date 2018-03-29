@@ -72,7 +72,6 @@ class Model(object):
 
         return self._lin_reg
 
-
     def compute_logistic(self):
         nb_words=len(self._data)
         vec=np.repeat(self._nb_infant_by_age, nb_words)

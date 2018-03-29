@@ -36,6 +36,7 @@ class Segmented(object):
 
         self._unit = path_seg.strip('/')[-2]
         self._algo = path_seg.strip('/')[-3]
+        self._corpus = path_seg.strip('/')[-4]
 
         self._nb_words = 0 #ok
         self._words = defaultdict(int) #ok
@@ -57,6 +58,12 @@ class Segmented(object):
         self.freq_top()
         self.freq_words()
 
+    def get_corpus(self):
+        return self._corpus
+    def get_algo(self):
+        return self._algo
+    def get_unit(self):
+        return self._unit
 
     def freq_top(self): #ok
         """
