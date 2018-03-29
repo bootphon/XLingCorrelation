@@ -1,5 +1,13 @@
 # XLingCorrelation
 
+## TODO
+
+- assert in tests
+- format of dataframe ([algo, age, R2, std_err, unit, form, corpus, nb_words ]) -- 
+	- corpus, algo, unit => segmented
+	- form, age (+type) => reports
+	- nb_words, R2, std_err => model(segmented, reports)
+
 ## Goal
 
 To have an easy to use package to compute correlation between algorithms segmentation and CDI reports
