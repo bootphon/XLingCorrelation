@@ -1,6 +1,7 @@
 import numpy as np
 import Model
 import Reports
+import pandas as pd
 
 class ListModels(object):
     """
@@ -14,6 +15,7 @@ class ListModels(object):
 
     def __init__(self, segmented_list, reports):
         # self._reports = reports
+
         self._reports = reports
         self._segmented_list = segmented_list
 
@@ -22,7 +24,8 @@ class ListModels(object):
         self._r2 = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
         self._std_err = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
 
-        self._df = pd.DataFrame(columns=['corpus', 'algo', 'unit', 'form', 'type', 'age', 'R2', 'std_err', 'nb_words'])
+        self._columns = ['corpus', 'algo', 'unit', 'form', 'type', 'age', 'R2', 'std_err', 'nb_words']
+        self._df = pd.DataFrame(columns=self._columns)
 
     def compute(self):
         """
@@ -39,12 +42,12 @@ class ListModels(object):
                 self._results[irep, iseg] = Model.Model(segmented.get_freq_words(), reports)
                 # compute correlation for this very model
                 self._results[irep, iseg].compute()
-                self._fill_dataframe(segmented, reports, age, self._results[irep, iseg])
+                self._fill_dataframe(segmented, age, self._results[irep, iseg])
 
         # fill r2 array
         self._fill_r2_stderr_arrays()
         # TODO same with other values - std_err maybe
-        self._fill_dataframe()
+        # self._fill_dataframe()
         return
 
     def _fill_r2_stderr_arrays(self):
@@ -54,18 +57,24 @@ class ListModels(object):
                 self._std_err[i,j] = self._results[i,j].get_lin_reg()['std_err']
         return
 
-    def fill_dataframe(self, segmented, reports, age, model):
+    def _fill_dataframe(self, segmented, age, model):
         corpus = segmented.get_corpus()
         algo = segmented.get_algo()
         unit = segmented.get_unit()
-        form = reports.get_form()
-        type = reports.get_type()
+        form = self._reports.get_form()
+        type = self._reports.get_type()
         age = age #//
         R2 = model.get_lin_reg()['r2_value']
         std_err = model.get_lin_reg()['std_err']
         nb_words = len(model.get_intersect()) #TODO check nrow
-        # 
-        # serie = pd.Series()
+        #
+        serie = pd.Series([corpus, algo, unit, form, type, age, R2, std_err, nb_words], index=self._columns)
+        self._df.append(serie, ignore_index=True)
+
+    def write_dataframe(self, name):
+        # to change - ie, create (?) right archi and store according to language/corpus/algo/unit/form
+        # what do we store in one single csv exactly ?
+        self._df.to_csv(name)
 
 
     def get_r2(self):
