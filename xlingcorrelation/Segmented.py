@@ -14,7 +14,7 @@ class Segmented(object):
     """
 
 
-    def __init__(self, path_seg, path_gold, path_ortho):
+    def __init__(self, path_seg, path_gold, path_ortho, unit, algo, corpus):
 
         self._path_seg = path_seg #ok
         self._path_gold = path_gold #ok
@@ -33,10 +33,11 @@ class Segmented(object):
         f.close() # function to open files ?
 
         self.dict_phono_ortho = {} #ok
-
-        self._unit = path_seg.strip('/')[-2]
-        self._algo = path_seg.strip('/')[-3]
-        self._corpus = path_seg.strip('/')[-4]
+        # print(path_seg)
+        # print("strip", path_seg.split('/'))
+        self._unit = unit
+        self._algo = algo
+        self._corpus = corpus
 
         self._nb_words = 0 #ok
         self._words = defaultdict(int) #ok
@@ -78,10 +79,12 @@ class Segmented(object):
         #     self._freq_top[word] += 1
 
         pre_res = Counter(words)
-        keys_to_keep = set([key for key, _ in pre_res.most_common(10000)])
-        for key in pre_res.keys() :
-            if not key in keys_to_keep :
-                del pre_res[key]
+        # # print(pre_res.most_common(10000)[-1])
+        # keys_to_keep = set([key for key, _ in pre_res.most_common()])
+        # for key in pre_res.keys() :
+        #     if key in keys_to_keep :
+        #         self._freq_top[key] = pre_res[key]
+
 
         self._freq_top = pre_res
 
@@ -122,6 +125,7 @@ class Segmented(object):
                 # print('found')
                 self._freq_words[self.dict_phono_ortho[word]]=self._freq_top[word]
 
+        # print(self._freq_words['you'])
         return self._freq_words
 
     def get_freq_words(self):

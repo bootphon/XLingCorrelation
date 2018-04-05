@@ -33,6 +33,7 @@ class ListModels(object):
 
         """
         for age in self._reports.get_age_range() :
+            print(age)
             reports = self._reports.get_reports(age)
             irep = age-self._reports.get_age_min()
 
@@ -66,10 +67,10 @@ class ListModels(object):
         age = age #//
         R2 = model.get_lin_reg()['r2_value']
         std_err = model.get_lin_reg()['std_err']
-        nb_words = len(model.get_intersect()) #TODO check nrow
+        nb_words = int(len(model.get_intersect())) #TODO check nrow
         #
         serie = pd.Series([corpus, algo, unit, form, type, age, R2, std_err, nb_words], index=self._columns)
-        self._df.append(serie, ignore_index=True)
+        self._df = self._df.append(serie, ignore_index=True)
 
     def write_dataframe(self, name):
         # to change - ie, create (?) right archi and store according to language/corpus/algo/unit/form

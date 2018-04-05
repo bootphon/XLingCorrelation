@@ -6,7 +6,7 @@ class Reports(object):
     Afterwards, from whole CDI to get age distribution, known by, no_knowledge ?
     """
     def __init__(self, path_cdi_prop, path_cdi_all=None):
-        self._reports = pd.read_csv(path_cdi_prop, sep=None)
+        self._reports = pd.read_csv(path_cdi_prop, sep=None, engine='python')
         self._nouns = []
         self._verbs = []
 

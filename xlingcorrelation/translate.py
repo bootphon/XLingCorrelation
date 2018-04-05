@@ -38,7 +38,7 @@ def build_phono_to_ortho(gold, ortho):
                     count_freq[word_ortho] += 1
                 except:
                     count_freq[word_ortho] = 1
-    print("There were {} errors".format(count_errors))
+    # print("There were {} mismatches between gold and orthographic lines.".format(count_errors))
     return d
 
 

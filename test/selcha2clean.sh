@@ -17,6 +17,7 @@ unset LANG
 
 # cat $SELFILE | rev | cut -d ' ' -f2- | rev > $SELFILE$TEST
 # cat $SELFILE | sed 's/..[0123456789]*_[0123456789]*..//g' > $SELFILE$TEST
+
 grep "*" < "$SELFILE" |
 
 # cat $SELFILE |
@@ -25,8 +26,9 @@ sed 's/^....:.//g' |
 # sed '/^0(.*) .$/d' |
 # sed  's/.*$//g' | #this code deletes bulletpoints (Û+numbers
 # sed 's/^U.*^U//g' |
-sed 's/..[0123456789]*_[0123456789]*..//g' |# replaces previous 4 lines - hopefully no encoding problem
+sed 's/..[0123456789][0123456789]*_[0123456789][0123456789]*..//g' |# replaces previous 4 lines - hopefully no encoding problem
 # tr -d '\"' |
+sed 's/_/ /g' |
 tr -d '\^' | #used to be identical to previous line
 tr -d '\/' |
 sed 's/\+/ /g' |

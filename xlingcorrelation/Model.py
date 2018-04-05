@@ -25,7 +25,7 @@ class Model(object):
         self._reports = self.to_dataframe(reports_words_dict, 'prop') #(especially for CDI, which is already in dataframe)
 
         self._data = self.intersect()
-        print('len', len(self._data))
+        # print('len', len(self._data))
 
         self._nb_infant_by_age = 0 # needed if logistic
         self._test_size = 0
@@ -44,14 +44,14 @@ class Model(object):
         return self._data
 
     def to_dataframe(self, data, name):
-        print(type(data))
+        # print(type(data))
         if (isinstance(data, pd.core.frame.DataFrame)):
             data.columns=['type', name]
-            print('1, ', data.head(5))
+            # print('1, ', data.head(5))
             return data
         elif (isinstance(data, dict)) :
             res = pd.DataFrame(list(data.items()), columns=['type', name])
-            print('2, ', res.head(5))
+            # print('2, ', res.head(5))
             return res
         else :
             # TODO raise error here
@@ -59,7 +59,7 @@ class Model(object):
 
     def intersect(self):
         res = pd.merge(self._corpus, self._reports, on='type', how='inner')
-        print(res.head(5))
+        # print(len(res),res.head(5))
         return res
 
     def compute_linear(self):
@@ -72,7 +72,7 @@ class Model(object):
 
         return self._lin_reg
 
-    def compute_logistic(self):
+    def compute_logistic(self): #TODO to test
         nb_words=len(self._data)
         vec=np.repeat(self._nb_infant_by_age, nb_words)
 
