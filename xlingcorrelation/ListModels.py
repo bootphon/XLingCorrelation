@@ -1,6 +1,6 @@
 import numpy as np
-import Model
-import Reports
+from . import Model
+from . import Reports
 import pandas as pd
 
 class ListModels(object):

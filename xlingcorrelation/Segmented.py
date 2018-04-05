@@ -4,7 +4,7 @@ from collections import defaultdict, Counter
 import subprocess
 import re
 import wordseg #(?) #TODO
-import translate #(?) #TODO
+from . import translate #(?) #TODO
 
 class Segmented(object):
 
