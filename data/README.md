@@ -2,17 +2,24 @@
 
 ## TODO
 
-[ ] upload data
+[x] upload data french
 
-[ ] upload clean data
+[x] upload clean data french
 
 [ ] upload script used to get clean data (+steps and all)
 
 [ ] organize in language/corpus/
 
+## From .cha file
+- Cleaning
+  - cha2sel.sh
+  - selcha2clean.sh
+- Get nb of utterances (optional)
+  - wc res.txt
+
 ## Phonologize file
 
-Using bootphon/phonemize
+Using bootphon/phonemize (eSpeak)
 
 ## Cleaning phonologized file
 
