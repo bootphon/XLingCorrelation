@@ -11,7 +11,7 @@
 [ ] organize in language/corpus/
 
 ## From .cha file
-- Cleaning
+- Cleaning - using cha2sel2clean.sh
   - cha2sel.sh
   - selcha2clean.sh
 - Get nb of utterances (optional)
@@ -20,6 +20,12 @@
 ## Phonologize file
 
 Using bootphon/phonemize (eSpeak)
+
+Command :
+
+(qsub) ./phono.sh file/to/process.txt language-marker phonologized/file.txt
+
+To check for language markers, phonemize --help. The script just loads the espeak module, and runs the phonemize command.
 
 ## Cleaning phonologized file
 
