@@ -1,5 +1,16 @@
 # Data
 
+Basically, what is done here is in three steps :
+1. the .cha files a retrieved and cleaned, so that we get only adult utterances with no annotation, only orthographic transcription which gives a ortholines.txt file
+2. this file is phonologized, using a wrapper of eSpeak available on bootphon (phonemizer) given the orthographic transcription, the language and the output file
+3. this new output file is then syllabified. To do so :
+  - the vowels and consonants of the language are retrieved on Wikipedia
+  - the onsets are retrieved from word beginnings of the corpus
+  - wordseg-syll is run using the file to syllabify, the vowels and the onsets files
+    - at each error, either a vowel or consonant is missing (ex: word from another language), an onset is missing, encoding problems for special characters, or there might be a problem in the phonologized corpus (only consonants word, ...)
+    - no more error => success ! A syllabified corpus !
+  - still some cleaning to do due to syll script (add ;eword, ;esyll, ...)
+
 ## TODO
 
 [x] upload data french
