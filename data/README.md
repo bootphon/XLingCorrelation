@@ -40,6 +40,10 @@ To check for language markers, phonemize --help. The script just loads the espea
 
 ## Cleaning phonologized file
 
+Command :
+
+wordseg-syll -p '\_' -w ' ' phono.txt onsets.txt vowels.txt > syllabified.txt
+
 - Using getOnsets.py (to upload) and wordseg-syll
 - Building basis language_onsets.txt using getOnsets.py (get consonants and build language_vowels.txt from wiki:IPAlanguage)
 - Run wordseg-syll / update language_onsets.txt when necessary/when error/...
