@@ -53,12 +53,14 @@ def build_phono_to_ortho_representative(d):
     for d_key,d_value in d.items():
         value_max=0
         key_max = 'undefined'
-        for key, value in d_value.items():
-            if value > value_max:
-                value_max = value
-                key_max = key
+        value_max, key_max = max((value, key) for key, value in d_value.items())
+        # for key, value in d_value.items():
+        #     print(key)
+        #     if value > value_max:
+        #         value_max = value
+        #         key_max = key
         res[d_key] = key_max
         token_freq[value_max]=key_max
     #freq_token = {v: k for k, v in token_freq.iteritems()}
     freq_res=sorted(token_freq.items(),reverse=True)
-    return([res,freq_res])
+    return res,freq_res

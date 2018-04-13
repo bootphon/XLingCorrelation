@@ -1,6 +1,6 @@
 import numpy as np
-from . import Model
-from . import Reports
+import Model
+import Reports
 import pandas as pd
 
 class ListModels(object):
@@ -33,13 +33,14 @@ class ListModels(object):
 
         """
         for age in self._reports.get_age_range() :
-            print(age)
+            # print(age)
             reports = self._reports.get_reports(age)
             irep = age-self._reports.get_age_min()
 
             for iseg in range(len(self._segmented_list)) :
                 segmented = self._segmented_list[iseg]
                 # create corresponding model
+                # print(segmented.get_freq_words())
                 self._results[irep, iseg] = Model.Model(segmented.get_freq_words(), reports)
                 # compute correlation for this very model
                 self._results[irep, iseg].compute()

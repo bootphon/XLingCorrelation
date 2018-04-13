@@ -10,4 +10,5 @@ setup(name='xlingcorrelation',
       license='',
       long_description=codecs.open('README.md', encoding='utf-8').read(),
       packages=find_packages(),
+      installs_requires=['pandas','subprocess','numpy','re','scipy','sklearn','zip']
       zip_safe=False)

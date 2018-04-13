@@ -1,8 +1,8 @@
 from collections import defaultdict, Counter
 import subprocess
 import re
-import wordseg #(?) #TODO
-from . import translate #(?) #TODO
+# import wordseg #(?) #TODO
+import translate #(?) #TODO
 import pandas as pd
 import numpy as np
 from scipy import stats
@@ -23,7 +23,7 @@ class Model(object):
 
         self._corpus = self.to_dataframe(corpus_words_dict, 'word_freq') #(if not already dataframe)
         self._reports = self.to_dataframe(reports_words_dict, 'prop') #(especially for CDI, which is already in dataframe)
-
+        
         self._data = self.intersect()
         # print('len', len(self._data))
 
@@ -59,12 +59,14 @@ class Model(object):
 
     def intersect(self):
         res = pd.merge(self._corpus, self._reports, on='type', how='inner')
-        # print(len(res),res.head(5))
+        # print(123, len(res),res.head(5))
         return res
 
     def compute_linear(self):
         X = np.log(self._data['word_freq'])
+        # print(X.mean())
         Y = self._data['prop']
+        # print(Y.mean())
 
         self._lin_reg['slope'], self._lin_reg['intersect'], self._lin_reg['r_value'], \
         self._lin_reg['p_value'], self._lin_reg['std_err'] = stats.linregress(X,Y)

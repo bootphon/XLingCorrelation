@@ -4,13 +4,13 @@ from collections import defaultdict, Counter
 import subprocess
 import re
 import wordseg #(?) #TODO
-from . import translate #(?) #TODO
+import translate #(?) #TODO
 
 class Segmented(object):
 
     """
     For given segmented text (result of an algorithm ? gold ?) : open, get stats (?) and all
-    Unit given ?
+    Unit given, algo, corpus given - otherwise, constraint on the name too big (?)
     """
 
 
@@ -43,7 +43,7 @@ class Segmented(object):
         self._words = defaultdict(int) #ok
 
         self._freq_top = Counter() #ok
-        self._freq_words = Counter() #ok
+
 
         self._single_words = 0 #TODO (?)
         self._correct_words = [] #TODO
@@ -79,6 +79,7 @@ class Segmented(object):
         #     self._freq_top[word] += 1
 
         pre_res = Counter(words)
+
         # # print(pre_res.most_common(10000)[-1])
         # keys_to_keep = set([key for key, _ in pre_res.most_common()])
         # for key in pre_res.keys() :
@@ -112,20 +113,25 @@ class Segmented(object):
         The number depends on the quantity of well segmented types... [no good]
         """
         # 1. Building dictionary #
+        # print(self._gold, self._ortho)
+
         d = translate.build_phono_to_ortho(self._gold, self._ortho)
+
         self.dict_phono_ortho = translate.build_phono_to_ortho_representative(d)[0]
+        
         # 2. Using dictionary to transcribe well segmented words into ortho rpz #
         # May be improved to transcribe badly segmented words ? #TODO
 
         # print(self.dict_phono_ortho)
-
-        for word in self._freq_top.keys():
+        self._freq_words  = Counter()
+        for word in sorted(self._freq_top):
             # print(word)
             if word in self.dict_phono_ortho :
-                # print('found')
+                # print('found', self.dict_phono_ortho[word], self._freq_top[word], word)
                 self._freq_words[self.dict_phono_ortho[word]]=self._freq_top[word]
 
         # print(self._freq_words['you'])
+        # print(sorted(self._freq_words.items()))
         return self._freq_words
 
     def get_freq_words(self):
