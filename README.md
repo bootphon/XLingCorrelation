@@ -8,7 +8,7 @@
   - [x] all_cha
   - [x] select, clean -> ortholines.txt
   - [x] phono -> phono.txt
-  - [ ] syllabify -> syllabified.txt
+  - [x] syllabify -> syllabified.txt
   - [ ] auto-tags -> auto-tags.txt
   - [ ] build grammars
 
