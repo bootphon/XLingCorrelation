@@ -9,7 +9,7 @@
   - [x] select, clean -> ortholines.txt
   - [x] phono -> phono.txt
   - [x] syllabify -> syllabified.txt
-  - [ ] auto-tags -> auto-tags.txt
+  - [x] auto-tags -> auto-tags.txt
   - [ ] build grammars
 
 ## Goal
