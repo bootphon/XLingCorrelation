@@ -2,8 +2,15 @@
 
 ## TODO
 
-- assert in tests
+- tests
 - documentation
+- group all preprocessing files into one folder :
+  - all_cha
+  - select, clean -> ortholines.txt
+  - phono -> phono.txt
+  - syllabify -> syllabified.txt
+  - auto-tags -> auto-tags.txt
+  - build grammars
 
 ## Goal
 
