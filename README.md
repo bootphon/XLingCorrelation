@@ -5,10 +5,10 @@
 - tests
 - documentation
 - group all preprocessing files into one folder :
-  - [ ] all_cha
-  - [ ] select, clean -> ortholines.txt
+  - [x] all_cha
+  - [x] select, clean -> ortholines.txt
   - [x] phono -> phono.txt
-  - [ ] syllabify -> syllabified.txt
+  - [x] syllabify -> syllabified.txt
   - [ ] auto-tags -> auto-tags.txt
   - [ ] build grammars
 
