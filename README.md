@@ -10,7 +10,7 @@
   - [x] phono -> phono.txt
   - [x] syllabify -> syllabified.txt
   - [x] auto-tags -> auto-tags.txt
-  - [ ] build grammars
+  - [x] build grammars
 
 ## Goal
 
