@@ -1,9 +1,12 @@
 import sys
 import unittest
-sys.path.insert(0, 'src/')
+# sys.path.insert(0, 'src/')
 import Segmented
 
-# class test_Segmented(unittest.TestCase):
+class test_Segmented(unittest.TestCase):
+
+    def test(self):
+        self.assertTrue(True)
 #
 #     @classmethod
 #     def setUpClass(cls): # once before everything #populate database for example
@@ -14,12 +17,12 @@ import Segmented
 #         pass
 #
 #     def setUp(self): # will run before each test
-#         self.seg = Segmented.Segmented('test/segmented.txt', 'test/gold.txt', 'test/ortholines.txt', 'unit', 'algo', 'corpus')
+#         self.seg = Segmented.Segmented('data/segmented.txt', 'data/gold.txt', 'data/ortholines.txt', 'unit', 'algo', 'corpus')
 #
 #         pass #could set up  new directroy in which to work+create objects needed
 #
 #     def tearDown(self): # will run after each test
-#         pass #could erase directory
+#         pass #could erase that directory
 #
 #     def test_freqtop(self):
 #         # for element in self.seg.freq_top():
@@ -38,9 +41,9 @@ import Segmented
     # edge cases
 
 
-seg = Segmented.Segmented('test/segmented.txt', 'test/gold.txt', 'test/ortholines.txt', 'unit', 'algo', 'corpus')
-# print('freqtop ',seg.freq_top().most_common())
-# print('freqtop2', seg.freq_top())
-# print('freqwords ', seg.freq_words().most_common())
-print('compute',list(seg.compute_words()))
-print(seg._nb_words)
+# seg = Segmented.Segmented('test/segmented.txt', 'test/gold.txt', 'test/ortholines.txt', 'unit', 'algo', 'corpus')
+# # print('freqtop ',seg.freq_top().most_common())
+# # print('freqtop2', seg.freq_top())
+# # print('freqwords ', seg.freq_words().most_common())
+# print('compute',list(seg.compute_words()))
+# print(seg._nb_words)
