@@ -16,22 +16,22 @@ class test_Segmented(unittest.TestCase):
 #     def tearDownClass(cls): # once after everything
 #         pass
 #
-#     def setUp(self): # will run before each test
-#         self.seg = Segmented.Segmented('data/segmented.txt', 'data/gold.txt', 'data/ortholines.txt', 'unit', 'algo', 'corpus')
-#
-#         pass #could set up  new directroy in which to work+create objects needed
-#
-#     def tearDown(self): # will run after each test
-#         pass #could erase that directory
-#
-#     def test_freqtop(self):
-#         # for element in self.seg.freq_top():
-#         #     self.assert
-#         self.assertCountEqual(self.seg.freq_top().most_common(), [('luhk', 2), ('siydhaxlayt', 1), ('layt', 1), ('dhaetsaxkaemerax', 1), ('yuwwaanaxsihtahp', 1), ('yuwwaanaxsiydhaxkaemerax', 1), ('yuwwaanaxsihtwihdhmaamiy', 1), ('dherzaxlihtaxlrehdlayt', 1), ('siy', 1), ('ehmeychehmyuwwaanaxsiy', 1)])
-#         # run python -m unittest test_Segmented.py
-#
-#     def test_freqwords(self):
-#         self.assertCountEqual(self.seg.freq_words().most_common(),[('look', 2), ('light', 1), ('see', 1)])
+    def setUp(self): # will run before each test
+        self.seg = Segmented.Segmented('tests/data/segmented.txt', 'tests/data/gold.txt', 'tests/data/ortholines.txt', 'unit', 'algo', 'corpus')
+
+        pass #could set up  new directroy in which to work+create objects needed
+
+    def tearDown(self): # will run after each test
+        pass #could erase that directory
+
+    def test_freqtop(self):
+        # for element in self.seg.freq_top():
+        #     self.assert
+        self.assertCountEqual(self.seg.freq_top().most_common(), [('luhk', 2), ('siydhaxlayt', 1), ('layt', 1), ('dhaetsaxkaemerax', 1), ('yuwwaanaxsihtahp', 1), ('yuwwaanaxsiydhaxkaemerax', 1), ('yuwwaanaxsihtwihdhmaamiy', 1), ('dherzaxlihtaxlrehdlayt', 1), ('siy', 1), ('ehmeychehmyuwwaanaxsiy', 1)])
+        # run python -m unittest test_Segmented.py
+
+    def test_freqwords(self):
+        self.assertCountEqual(self.seg.freq_words().most_common(),[('look', 2), ('light', 1), ('see', 1)])
 # # TODO : assert
 #
 #
