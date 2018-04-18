@@ -8,7 +8,9 @@ setup(name='xlingcorrelation',
       author='GladB',
       author_email='gladys.baudet@gmail.com',
       license='',
+      test_suite='nose.collector',
+      tests_require=['nose'],
       long_description=codecs.open('README.md', encoding='utf-8').read(),
       packages=find_packages(),
-      installs_requires=['pandas','subprocess','numpy','re','scipy','sklearn','zip']
+      install_requires=['pandas','numpy','scipy','sklearn','zip'],
       zip_safe=False)
