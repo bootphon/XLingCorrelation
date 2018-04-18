@@ -1,6 +1,5 @@
 import numpy as np
-import Model
-import Reports
+from xlingcorrelation import Model, Reports
 import pandas as pd
 
 class ListModels(object):
@@ -20,7 +19,7 @@ class ListModels(object):
         self._segmented_list = segmented_list
 
 
-        self._results = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = Model.Model) # array of models ? dict ?
+        self._results = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = Model) # array of models ? dict ?
         self._r2 = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
         self._std_err = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
 
@@ -41,7 +40,7 @@ class ListModels(object):
                 segmented = self._segmented_list[iseg]
                 # create corresponding model
                 # print(segmented.get_freq_words())
-                self._results[irep, iseg] = Model.Model(segmented.get_freq_words(), reports)
+                self._results[irep, iseg] = Model(segmented.get_freq_words(), reports)
                 # compute correlation for this very model
                 self._results[irep, iseg].compute()
                 self._fill_dataframe(segmented, age, self._results[irep, iseg])

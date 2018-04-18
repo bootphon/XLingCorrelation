@@ -4,7 +4,8 @@ from collections import defaultdict, Counter
 import subprocess
 import re
 import wordseg #(?) #TODO
-import translate #(?) #TODO
+# import xlingcorrelation.translate #(?) #TODO
+from xlingcorrelation import translate
 
 class Segmented(object):
 
@@ -118,7 +119,7 @@ class Segmented(object):
         d = translate.build_phono_to_ortho(self._gold, self._ortho)
 
         self.dict_phono_ortho = translate.build_phono_to_ortho_representative(d)[0]
-        
+
         # 2. Using dictionary to transcribe well segmented words into ortho rpz #
         # May be improved to transcribe badly segmented words ? #TODO
 

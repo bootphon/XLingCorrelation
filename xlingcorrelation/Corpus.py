@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 import subprocess
-import wordseg #(?) #TODO
+# import wordseg #(?) #TODO
 
 class Corpus(object):
 
@@ -29,7 +29,7 @@ class Corpus(object):
         self._ortho = []
         self._tags = []
 
-        self.compute_all_cha()
+        # self.compute_all_cha()
 
         return
 

@@ -2,7 +2,7 @@ from collections import defaultdict, Counter
 import subprocess
 import re
 # import wordseg #(?) #TODO
-import translate #(?) #TODO
+import xlingcorrelation.translate #(?) #TODO
 import pandas as pd
 import numpy as np
 from scipy import stats
@@ -23,7 +23,7 @@ class Model(object):
 
         self._corpus = self.to_dataframe(corpus_words_dict, 'word_freq') #(if not already dataframe)
         self._reports = self.to_dataframe(reports_words_dict, 'prop') #(especially for CDI, which is already in dataframe)
-        
+
         self._data = self.intersect()
         # print('len', len(self._data))
 
