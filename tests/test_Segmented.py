@@ -33,6 +33,7 @@ class test_Segmented(unittest.TestCase):
         self.assertCountEqual(self.seg.compute_words(), answer)
 
     # add edge cases
+    # add homophones !!
 
 if __name__=='__main__':
     unittest.main() # use python test_Segmented.py
