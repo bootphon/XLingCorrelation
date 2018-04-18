@@ -17,6 +17,9 @@ class test_Model(unittest.TestCase):
         reg = self.mod.compute()
         self.assertEqual(int(1000000*(reg['r2_value'])),356806)
 
+    # add edge cases
+    # add logistic
+
 
 
 if __name__=='__main__':
