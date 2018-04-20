@@ -7,31 +7,52 @@ import subprocess
 class Corpus(object):
 
     """
-    For given path to tags.txt, blabla
+    For given path to tags.txt :
+    - upload content of tags.txt in self._tags
+        - no ortho or gold for now
+    - get nb and list of words : words defaultdict
+    - get nb and list of monosyllabic words + distribution : mono_words defaultdict
+    - get nb and list of isolated words + distribution : iso_words defaultdict
+    - nb+list of syllables + distribution : syllables defaultdict
+    - nb+list of phonemes + distribution : phonemes defaultdict
+    - distribution of words by length in syllables/phones
 
     """
 
     def __init__(self, path):
 
         self._path = path
-        # self.cha_all = ''
 
-        self._nb_words = 0 # compute nb words
-        self._nb_syll = 0 # compute nb syll after syllabification
-        self._nb_phon = 0 # compute nb phon after phonologize
+        f = open(path, 'r')
+        self._tags = f.readlines()
+        f.close()
 
         self._words = defaultdict(int) # (dictionary with word : nb_occurences)
         self._syll = defaultdict(int) # same with syll
         self._phon = defaultdict(int) # same with phones
 
-        self._single_words = 0
-
-        self._ortho = []
-        self._tags = []
-
-        # self.compute_all_cha()
+        self._mono_words = defaultdict(int) # same w/ monosyllabic words
+        self._iso_words = defaultdict(int) # same w/ isolated words
 
         return
+
+    def get_nb_syllables(self):
+        return sum(self._syll.values())
+
+    def get_nb_phones(self):
+        return sum(self._phon.values())
+
+    def get_nb_isolated_words(self):
+        return sum(self._iso_words.values())
+
+    def get_nb_monosyllabic_words(self):
+        return sum(self._mono_words.values())
+
+    def get_nb_words(self):
+        return sum(self._words.values())
+
+    def get_nb_unique_words(self):
+        return len(list(self._words.keys()))
 
     # def compute_all_cha(self):
     #
@@ -80,24 +101,24 @@ class Corpus(object):
     #     self._syll = syllabify(self._ortho, onsets, vowels)
     #     return
 
-    def compute_words(self):
-        for line in self._ortho :
-            curr_line = 0
-            for word in line.split():
-                self._words[word]+=1
-                self.nb_words += 1
-                curr_line += 1
-            if (curr_line==0) :
-                self._single_words += 1
+    # def compute_words(self):
+    #     for line in self._ortho :
+    #         curr_line = 0
+    #         for word in line.split():
+    #             self._words[word]+=1
+    #             self.nb_words += 1
+    #             curr_line += 1
+    #         if (curr_line==0) :
+    #             self._single_words += 1
 
     def count_words(self):
         return self._nb_words
 
     def get_word_tokens(self):
-        return self._words.keys()
+        return self._words
 
     def get_word_types(self):
-        return self._words
+        return self._words.keys()
 
     def count_phone(self):
         return self._nb_phon
@@ -112,7 +133,5 @@ class Corpus(object):
         return self._syll.keys()
 
     def get_stats(self):
-        """ Using wordseg.stats """
+        """ Using wordseg.stats (?)"""
         return
-
-    # TODO distribution words by length of syllable
