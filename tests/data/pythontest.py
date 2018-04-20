@@ -1,16 +1,14 @@
 from collections import Counter
+import numpy as np
+import matplotlib.pyplot as plt
+from pandas import Series
+
 f= open("tags.txt",'r')
 blop_init = f.read()
 f.close()
 
 print(blop_init)
 print('\n')
-# blop = [e.replace("\n", '') for e in blop]
-# blop = [e.replace(" ", '') for e in blop]
-# blop = [e.replace(";esyll", '') for e in blop]
-# blop = [e.replace(";eword", ' ')[:-1] for e in blop]
-#
-# blop = [e.split() for e in blop]
 
 """ WORDS """
 blop=blop_init.replace("\n", '')
@@ -21,6 +19,7 @@ blop=blop.replace(";eword", ' ')[:-1] # getting words alright
 print("Words")
 print(blop)
 print(len(blop.split()))
+
 
 """ SYLLABLES """
 
@@ -33,6 +32,7 @@ print("Syllables")
 print(blop2)
 print(len(blop2.split()))
 
+
 """ PHONES """
 
 blop3 = blop_init.replace("\n", '')
@@ -43,13 +43,40 @@ print("Phones")
 print(blop3)
 print(len(blop3.split()))
 
+c = Counter(blop3.split())
+print(c)
+# labels, values = zip(*Counter(blop3.split()).items())
+# indexes = np.arange(len(labels))
+# width = 1
+#
+# plt.bar(indexes, values, width)
+# plt.xticks(indexes + width * 0.5, labels)
+
+# s=Series(blop3.split())
+# vc = s.value_counts()
+# vc.plot(kind='bar')
+
+plt.show()
+
 """ ISOLATED WORDS """
+
 iso=[]
 blop4 = blop_init.split("\n")
 for b in blop4:
     if b.count(";eword")==1:
-        iso.append(b)
-print(iso)
+        iso.append(b.replace(";eword","").replace(";esyll","").replace(" ",""))
 
-c = Counter(blop3.split())
-print(c)
+print("Isolated words")
+print(Counter(iso))
+
+
+""" Monosyllabic words """
+
+mono = []
+blop5 = blop_init.split(";eword")
+for b in blop5 :
+    if b.count(";esyll")==1:
+        mono.append(b.replace(";eword","").replace(";esyll","").replace(" ","").replace("\n",""))
+
+print("Monosyllabic words")
+print(Counter(mono))
