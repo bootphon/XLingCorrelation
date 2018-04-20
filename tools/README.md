@@ -4,21 +4,21 @@
 
 blabla
 
-- Get .cha in one file
+1. Get .cha in one file
 
     **group_all_cha.sh**
 
-- Select+clean good lines => ortho
+2. Select+clean good lines => ortho
 
     **cha2sel.sh**
     
     **selcha2clean.sh**
 
-- Phonologization => phono
+3. Phonologization => phono
 
     **phono.sh**
 
-- Syllabify
+4. Syllabify
 
   - Create language-vowels.txt and language-consonants.txt
   
@@ -32,11 +32,11 @@ blabla
   
     **getOnsets.py**
 
-- Insert right tags (-p ' ' -s ';esyll' -w ';eword')
+5. Insert right tags (-p ' ' -s ';esyll' -w ';eword')
 
   **cleaning_post_syll.sh**
   
-- Create grammars (both phone and syllable)
+6. Create grammars (both phone and syllable)
 
   **phone_dic.py**
   
