@@ -19,22 +19,64 @@ class Corpus(object):
 
     """
 
-    def __init__(self, path):
+    def __init__(self, path, syll_sep=";esyll", word_sep=";eword"):
 
         self._path = path
+        self._syll_sep = syll_sep
+        self._word_sep = word_sep
 
         f = open(path, 'r')
-        self._tags = f.readlines()
+        self._tags = f.read()
         f.close()
 
-        self._words = defaultdict(int) # (dictionary with word : nb_occurences)
-        self._syll = defaultdict(int) # same with syll
-        self._phon = defaultdict(int) # same with phones
+        self._words = compute_words() # (dictionary with word : nb_occurences)
+        self._syll = compute_syll() # same with syll
+        self._phon = compute_phon() # same with phones
 
-        self._mono_words = defaultdict(int) # same w/ monosyllabic words
-        self._iso_words = defaultdict(int) # same w/ isolated words
+        self._mono_words = compute_mono_words() # same w/ monosyllabic words
+        self._iso_words = compute_iso_words() # same w/ isolated words
 
         return
+
+    def compute_words(self):
+        blop=self._tags.replace("\n", '')
+        blop=blop.replace(" ", '')
+        blop=blop.replace(self._syll_sep, '')
+        blop=blop.replace(self._word_sep, ' ')[:-1] # getting words alright
+
+        return (Counter(blop.split()))
+
+    def compute_syll(self):
+        blop2 = self._tags.replace("\n", '')
+        blop2 = blop2.replace(" ", "")
+        blop2 = blop2.replace(self._word_sep, "")
+        blop2 = blop2.replace(self._syll_sep, " ")
+
+        return (Counter(blop2.split()))
+
+    def compute_phon(self):
+        blop3 = self._tags.replace("\n", '')
+        blop3 = blop3.replace(self._word_sep, "")
+        blop3 = blop3.replace(self._syll_sep, "")
+
+        return (Counter(blop3.split()))
+
+    def compute_iso_words(self):
+        iso=[]
+        blop4 = blop_init.split("\n")
+        for b in blop4:
+            if b.count(self._word_sep)==1:
+                iso.append(b.replace(self._word_sep,"").replace(self._syll_sep,"").replace(" ",""))
+        return (Counter(iso))
+
+    def compute_mono_words(self):
+        mono = []
+        blop5 = blop_init.split(self._word_sep)
+        for b in blop5 :
+            if b.count(self._syll_sep)==1:
+                mono.append(b.replace(self._word_sep,"").replace(self._syll_sep,"").replace(" ","").replace("\n",""))
+        return (Counter(mono))
+
 
     def get_nb_syllables(self):
         return sum(self._syll.values())
@@ -51,87 +93,19 @@ class Corpus(object):
     def get_nb_words(self):
         return sum(self._words.values())
 
-    def get_nb_unique_words(self):
+    def get_nb_word_types(self):
         return len(list(self._words.keys()))
 
-    # def compute_all_cha(self):
-    #
-    #     # call script that finds all .cha files in path and concatenates them into self.cha_all
-    #     # raise error if no such path or no cha file in path
-    #     subprocess.call(['./write_cha.sh', self._path]) # creates path/all_cha.txt
-    #
-    #
-    # def clean_annotations(self, cha='/all_cha.txt', sel='/ortho_sel.txt', ortho='/ortholines.txt', ling_clean=None):
-    #     # call script that selects lines
-    #     subprocess.call(['./cha2sel.sh', self._path+cha, self._path+sel]) # creates path/ortho_sel.txt
-    #
-    #     # call script that cleans lines
-    #     subprocess.call(['./selcha2clean.sh', self._path+sel, self._path+ortho]) # creates path/ortholines.txt
-    #
-    #     # if extraclean => whaddaya / what do you, you're => you are etc
-    #     if ling_clean:
-    #         subprocess.call([ling_clean, self._path+ortho])
-    #     # read and fill right attribute with ortholines.txt
-    #     f=open(self._path+ortho,"r+")
-    #     self._ortho = f.readlines()
-    #     f.close()
-    #
-    #     self.compute_words()
-    #     return
-
-    # def phonologize(self, language='en-us-festival', ortho='/ortholines.txt', tags='/tags.txt'):
-    #     """
-    #     LIST AVAILABLE LANGUAGES IN HELP
-    #     call script w/
-    #     module load espeak
-    #     phonemize -l $language -p ' ' -w ';eword' path+file > path+tags
-    #     """
-    #     subprocess.call(['./phono.sh', language, self._path+ortho, self._path+tags])
-    #
-    #     # read and return tags
-    #     return
-
-    # def syllabify(self, onsets_file, vowels_file): #change parameters so that only take the language in which the file is written (onsets and vowels already in the package somewhere)
-    #     """
-    #     TODO
-    #     """
-    #     onsets = open(onset_file, 'r').readlines()
-    #     vowels = open(vowels_file, 'r').readlines()
-    #
-    #     self._syll = syllabify(self._ortho, onsets, vowels)
-    #     return
-
-    # def compute_words(self):
-    #     for line in self._ortho :
-    #         curr_line = 0
-    #         for word in line.split():
-    #             self._words[word]+=1
-    #             self.nb_words += 1
-    #             curr_line += 1
-    #         if (curr_line==0) :
-    #             self._single_words += 1
-
-    def count_words(self):
-        return self._nb_words
-
-    def get_word_tokens(self):
+    def get_words(self):
         return self._words
 
-    def get_word_types(self):
-        return self._words.keys()
-
-    def count_phone(self):
+    def get_phones(self):
         return self._nb_phon
 
-    def get_phon(self):
-        return self._phon.keys()
-
-    def count_syll(self):
+    def get_syllables(self):
         return self._nb_syll
 
-    def get_syll(self):
-        return self._syll.keys()
 
-    def get_stats(self):
-        """ Using wordseg.stats (?)"""
-        return
+    # def get_stats(self):
+    #     """ Using wordseg.stats (?)"""
+    #     return
