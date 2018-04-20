@@ -38,7 +38,7 @@ blabla
   
 6. Create grammars (both phone and syllable)
 
-  **phone_dic.py**
+   **phone_dic.py**
   
-  **syllable_dic.py**
+   **syllable_dic.py**
 
