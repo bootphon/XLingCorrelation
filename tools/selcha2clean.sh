@@ -45,6 +45,7 @@ sed 's/&[^ ]*//g' |  #delete words beginning with & ##IMPORTANT CHOICE COULD HAV
 sed 's/\[[^[]*\]//g' | #delete comments
 # sed 's/([^(]*)//g' | #IMPORTANT CHOICE -- UNCOMMENT THIS LINE AND COMMENT OUT THE NEXT TO DELETE MATERIAL NOTED AS NOT PRONOUNCED
 sed 's/(//g' | sed 's/)//g' | #IMPORTANT CHOICE -- UNCOMMENT THIS LINE AND COMMENT OUT THE PRECEDING TO REMOVE PARENTHESES TAGGING UNPRONOUNCED MATERIAL
+sed 's/‹//g' | sed 's/›//g' |
 sed 's/xxx//g' |
 sed 's/www//g' |
 sed 's/XXX//g' |
