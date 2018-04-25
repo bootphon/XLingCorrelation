@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Feb 24 10:45:32 2017
-
-@author: elinlarsen
-"""
 
 import sys
 from collections import Counter
