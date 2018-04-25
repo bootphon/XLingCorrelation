@@ -22,9 +22,13 @@ class ListModels(object):
         self._results = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = Model) # array of models ? dict ?
         self._r2 = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
         self._std_err = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
-
-        self._columns = ['corpus', 'algo', 'unit', 'form', 'type', 'age', 'R2', 'std_err', 'nb_words']
+        self._p_value = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
+        self._columns = ['corpus', 'algo', 'unit', 'form', 'type', 'age', 'R2', 'std_err', 'p_value', 'nb_words']
         self._df = pd.DataFrame(columns=self._columns)
+
+    def plot_regression(self, i, j):
+        self._results[i,j].plot()
+
 
     def compute(self):
         """
@@ -47,6 +51,7 @@ class ListModels(object):
 
         # fill r2 array
         self._fill_r2_stderr_arrays()
+
         # TODO same with other values - std_err maybe
         # self._fill_dataframe()
         return
@@ -56,6 +61,7 @@ class ListModels(object):
             for j in range(len(self._results[0])):
                 self._r2[i,j] = self._results[i,j].get_lin_reg()['r2_value']
                 self._std_err[i,j] = self._results[i,j].get_lin_reg()['std_err']
+                self._p_value[i,j] = self._results[i,j].get_lin_reg()['p_value']
         return
 
     def _fill_dataframe(self, segmented, age, model):
@@ -67,9 +73,10 @@ class ListModels(object):
         age = age #//
         R2 = model.get_lin_reg()['r2_value']
         std_err = model.get_lin_reg()['std_err']
+        p_value = model.get_lin_reg()['p_value']
         nb_words = int(len(model.get_intersect())) #TODO check nrow
         #
-        serie = pd.Series([corpus, algo, unit, form, type, age, R2, std_err, nb_words], index=self._columns)
+        serie = pd.Series([corpus, algo, unit, form, type, age, R2, std_err, p_value, nb_words], index=self._columns)
         self._df = self._df.append(serie, ignore_index=True)
 
     def write_dataframe(self, name):

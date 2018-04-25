@@ -5,6 +5,7 @@ import re
 import xlingcorrelation.translate #(?) #TODO
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from scipy import stats
 from sklearn.linear_model import LogisticRegression
 
@@ -33,6 +34,19 @@ class Model(object):
         self._lin_reg = {'slope' : 0, 'intercept' : 0, 'r_value' : 0, 'r2_value' : 0, 'p_value' : 0, 'std_err' : 0}
         self._log_reg = {'r2_value' : 0, 'std_err' : 0}
         # self._results = {}
+
+    def plot(self):
+        X = np.log(self._data['word_freq'])
+        Y = self._data['prop']
+        labels=list(self._data['type'])
+        plt.scatter(X,Y)
+        for label, x, y in zip(labels,X,Y):
+            plt.annotate(label, xy=(x,y))
+
+        X_plot = np.linspace(0,max(X),1000)
+        plt.plot(X_plot, X_plot*self._lin_reg['slope'] + self._lin_reg['intercept'])
+
+        plt.show()
 
     def get_lin_reg(self):
         return self._lin_reg
@@ -68,7 +82,7 @@ class Model(object):
         Y = self._data['prop']
         # print(Y.mean())
 
-        self._lin_reg['slope'], self._lin_reg['intersect'], self._lin_reg['r_value'], \
+        self._lin_reg['slope'], self._lin_reg['intercept'], self._lin_reg['r_value'], \
         self._lin_reg['p_value'], self._lin_reg['std_err'] = stats.linregress(X,Y)
         self._lin_reg['r2_value'] = self._lin_reg['r_value']*self._lin_reg['r_value'] # r2 = r*r
 

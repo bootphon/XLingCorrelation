@@ -1,7 +1,9 @@
 # import all you need
 
-from collections import defaultdict
+from collections import defaultdict, Counter
 import subprocess
+import numpy as np
+import matplotlib.pyplot as plt
 
 # import wordseg #(?) #TODO
 
@@ -30,12 +32,12 @@ class Corpus(object):
         self._tags = f.read()
         f.close()
 
-        self._words = compute_words() # (dictionary with word : nb_occurences)
-        self._syll = compute_syll() # same with syll
-        self._phon = compute_phon() # same with phones
+        self._words = self.compute_words() # (dictionary with word : nb_occurences)
+        self._syll = self.compute_syll() # same with syll
+        self._phon = self.compute_phon() # same with phones
 
-        self._mono_words = compute_mono_words() # same w/ monosyllabic words
-        self._iso_words = compute_iso_words() # same w/ isolated words
+        self._mono_words = self.compute_mono_words() # same w/ monosyllabic words
+        self._iso_words = self.compute_iso_words() # same w/ isolated words
 
 
     def compute_words(self):
@@ -93,7 +95,15 @@ class Corpus(object):
         self.plot_counter(self._syll, nb)
 
     def plot_words(self, nb=100):
-        self.plot_counter(self._words, nb)    
+        self.plot_counter(self._words, nb)
+
+##########
+    def get_nb_tokens(self, dict):
+        return(sum(dict.values()))
+
+    def get_nb_types(self, dict):
+        return len(list(dict.keys()))
+##########
 
     def get_nb_syllables(self):
         return sum(self._syll.values())
@@ -127,6 +137,21 @@ class Corpus(object):
 
     def get_monosyllabic_words(self):
         return self._mono_words
+
+    def display_basic_info(self):
+        print("\n")
+        print("Word tokens\t\t\t",self.get_nb_words())
+        print("Word types\t\t\t", self.get_nb_word_types(),"\n")
+        print("Syllable tokens\t\t\t", self.get_nb_syllables())
+        print("Syllable types\t\t\t", self.get_nb_types(self._syll),"\n")
+        print("Phone tokens\t\t\t", self.get_nb_phones())
+        print("Phone types\t\t\t", self.get_nb_types(self._phon), "\n")
+        n = self.get_nb_words()
+        m = self.get_nb_word_types()
+        print("Isolated words tokens\t\t", self.get_nb_isolated_words(), "\t\t", self.get_nb_isolated_words()/n,"%")
+        print("Isolated word types\t\t", self.get_nb_types(self._iso_words), "\t\t", self.get_nb_types(self._iso_words)/m, "%", "\n")
+        print("Monosyllabic word tokens\t", self.get_nb_monosyllabic_words(),"\t", self.get_nb_monosyllabic_words()/n, "%")
+        print("Monosyllabic word types\t\t", self.get_nb_types(self._mono_words),"\t\t", self.get_nb_types(self._mono_words)/m, "%", "\n")
 
 
     # def get_stats(self):
