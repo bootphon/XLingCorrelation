@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 import subprocess
+
 # import wordseg #(?) #TODO
 
 class Corpus(object):
@@ -36,47 +37,63 @@ class Corpus(object):
         self._mono_words = compute_mono_words() # same w/ monosyllabic words
         self._iso_words = compute_iso_words() # same w/ isolated words
 
-        return
 
     def compute_words(self):
-        blop=self._tags.replace("\n", '')
-        blop=blop.replace(" ", '')
-        blop=blop.replace(self._syll_sep, '')
-        blop=blop.replace(self._word_sep, ' ')[:-1] # getting words alright
+        word=self._tags.replace("\n", '')
+        word=word.replace(" ", '')
+        word=word.replace(self._syll_sep, '')
+        word=word.replace(self._word_sep, ' ')[:-1] # getting words alright
 
-        return (Counter(blop.split()))
+        return (Counter(word.split()))
 
     def compute_syll(self):
-        blop2 = self._tags.replace("\n", '')
-        blop2 = blop2.replace(" ", "")
-        blop2 = blop2.replace(self._word_sep, "")
-        blop2 = blop2.replace(self._syll_sep, " ")
+        syll = self._tags.replace("\n", '')
+        syll = syll.replace(" ", "")
+        syll = syll.replace(self._word_sep, "")
+        syll = syll.replace(self._syll_sep, " ")
 
-        return (Counter(blop2.split()))
+        return (Counter(syll.split()))
 
     def compute_phon(self):
-        blop3 = self._tags.replace("\n", '')
-        blop3 = blop3.replace(self._word_sep, "")
-        blop3 = blop3.replace(self._syll_sep, "")
+        phon = self._tags.replace("\n", '')
+        phon = phon.replace(self._word_sep, "")
+        phon = phon.replace(self._syll_sep, "")
 
-        return (Counter(blop3.split()))
+        return (Counter(phon.split()))
 
     def compute_iso_words(self):
         iso=[]
-        blop4 = blop_init.split("\n")
-        for b in blop4:
+        utt = self._tags.split("\n")
+        for b in utt:
             if b.count(self._word_sep)==1:
                 iso.append(b.replace(self._word_sep,"").replace(self._syll_sep,"").replace(" ",""))
         return (Counter(iso))
 
     def compute_mono_words(self):
         mono = []
-        blop5 = blop_init.split(self._word_sep)
-        for b in blop5 :
+        words = self._tags.split(self._word_sep)
+        for b in words :
             if b.count(self._syll_sep)==1:
                 mono.append(b.replace(self._word_sep,"").replace(self._syll_sep,"").replace(" ","").replace("\n",""))
         return (Counter(mono))
 
+    def plot_counter(self, c, nb=100):
+        labels, values = zip(*c.most_common(nb))
+        indexes = np.arange(len(labels))
+        width = 1
+
+        plt.bar(indexes, values, width)
+        plt.xticks(indexes + width * 0.5, labels)
+        plt.show()
+
+    def plot_phones(self, nb=100):
+        self.plot_counter(self._phon, nb)
+
+    def plot_syllables(self, nb=100):
+        self.plot_counter(self._syll, nb)
+
+    def plot_words(self, nb=100):
+        self.plot_counter(self._words, nb)    
 
     def get_nb_syllables(self):
         return sum(self._syll.values())
@@ -104,6 +121,12 @@ class Corpus(object):
 
     def get_syllables(self):
         return self._nb_syll
+
+    def get_isolated_words(self):
+        return self._iso_words
+
+    def get_monosyllabic_words(self):
+        return self._mono_words
 
 
     # def get_stats(self):
