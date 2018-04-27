@@ -5,7 +5,11 @@ from xlingcorrelation import Segmented, Reports, ListModels, Model
 path = '/Users/gladysbaudet//Desktop/PFE/'
 # cds = 'CDS/english/Brent/Brent/'
 cds = 'CDS/english/Brent/full_corpus/'
-# cds = "CDS/french/Lyon/"
+# cds = 'CDS/english/Brent/sub_corpus/10k/'
+# cds = 'CDS/english/Providence/'
+# cds = 'CDS/english/buckeye/'
+# cds = 'CDS/english/BernsteinCDS/'
+# cds = 'CDS/english/Brent/10K0/'
 size = 'full_corpus/'
 algos = ['ag/', 'dibs/', 'puddle/','baseline/', 'tp/relativeforward/', 'tp/absoluteforward/']
 unit = 'syllable/'
@@ -20,25 +24,30 @@ unit = 'syllable/'
 
 # listsegfull = [Segmented("tests/data/segmented.txt", "tests/data/gold.txt", "tests/data/ortholines.txt", "unit", "algo", "cds")]
 # listsegfull = [Segmented(path+'Results/'+size+algo+unit+'segmented.txt', path+cds+'gold.txt', path+cds+'ortholines.txt', unit, algo, cds) for algo in algos]
-listsegfull = [Segmented(path+cds+'gold.txt', path+cds+'gold.txt', path+cds+'ortholines.txt', 'unit', 'gold', 'cds')]
+#listsegfull = [Segmented(path+cds+'gold.txt', path+cds+'gold.txt', path+cds+'ortholines.txt', 'unit', 'gold', 'cds')]
 # listsegfull = [Segmented(path+cds+'gold.txt', path+cds+'gold.txt', path+cds+'ortholines-limited-updated.txt', 'unit', 'gold', 'cds')]
 
 
-
-print("daddy : ",listsegfull[0]._freq_words['daddy'])
-print("daediy : ", listsegfull[0]._freq_top['daediy'])
+print(cds)
+# print("daddy : ",listsegfull[0]._freq_words['daddy'])
+# print("daediy : ", listsegfull[0]._freq_top['daediy'])
+# print("mommy : ",listsegfull[0]._freq_words['mommy'])
+# print("maamiy : ", listsegfull[0]._freq_top['maamiy'])
 
 # rep = Reports("tests/data/reports.csv")
 rep = Reports(path+"CDI/english/Prop_WG_understands_8_18.csv")
 
 # listortho=Counter()
 ortho=open(path+cds+"ortholines.txt",'r').read()
-rep_ortho=rep.get_reports(13)
-seg_ortho=Counter(ortho.split())
+rep_ortho=rep.get_reports(8)
+seg_ortho=Counter(ortho.lower().split())
+print(seg_ortho['mommy'])
 mod_ortho=Model(seg_ortho,rep_ortho)
 mod_ortho.compute()
-mod_ortho.plot()
 
+print("Nb words : ", len(mod_ortho._data))
+print(mod_ortho._lin_reg)
+mod_ortho.plot()
 # models = ListModels(listsegfull, rep)
 #
 # models.compute()
