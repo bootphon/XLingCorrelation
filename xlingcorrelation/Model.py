@@ -35,13 +35,14 @@ class Model(object):
         self._log_reg = {'r2_value' : 0, 'std_err' : 0}
         # self._results = {}
 
-    def plot(self):
+    def plot(self, annotate=False):
         X = np.log(self._data['word_freq'])
         Y = self._data['prop']
         labels=list(self._data['type'])
         plt.scatter(X,Y)
-        for label, x, y in zip(labels,X,Y):
-            plt.annotate(label, xy=(x,y))
+        if annotate :
+            for label, x, y in zip(labels,X,Y):
+                plt.annotate(label, xy=(x,y))
 
         X_plot = np.linspace(0,max(X),1000)
         plt.plot(X_plot, X_plot*self._lin_reg['slope'] + self._lin_reg['intercept'])
