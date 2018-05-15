@@ -21,9 +21,9 @@ class ListModels(object):
 
         self._results = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = Model) # array of models ? dict ?
         self._r2 = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
-        self._std_err = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
-        self._p_value = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
-        self._columns = ['corpus', 'algo', 'unit', 'form', 'type', 'age', 'R2', 'std_err', 'p_value', 'nb_words']
+        # self._std_err = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
+        # self._p_value = np.empty([len(self._reports.get_age_range()), len(self._segmented_list)], dtype = float)
+        self._columns = ['corpus', 'algo', 'unit', 'form', 'type', 'age', 'R2', 'nb_words']
         self._df = pd.DataFrame(columns=self._columns)
 
     def plot_regression(self, i, j):
@@ -50,7 +50,7 @@ class ListModels(object):
                 self._fill_dataframe(segmented, age, self._results[irep, iseg])
 
         # fill r2 array
-        self._fill_r2_stderr_arrays()
+        # self._fill_r2_stderr_arrays()
 
         # TODO same with other values - std_err maybe
         # self._fill_dataframe()
@@ -72,11 +72,10 @@ class ListModels(object):
         type = self._reports.get_type()
         age = age #//
         R2 = model.get_lin_reg()['r2_value']
-        std_err = model.get_lin_reg()['std_err']
-        p_value = model.get_lin_reg()['p_value']
+        # p_value = model.get_lin_reg()['p_value']
         nb_words = int(len(model.get_intersect())) #TODO check nrow
         #
-        serie = pd.Series([corpus, algo, unit, form, type, age, R2, std_err, p_value, nb_words], index=self._columns)
+        serie = pd.Series([corpus, algo, unit, form, type, age, R2, nb_words], index=self._columns)
         self._df = self._df.append(serie, ignore_index=True)
 
     def write_dataframe(self, name):

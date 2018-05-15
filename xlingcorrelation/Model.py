@@ -6,6 +6,8 @@ import xlingcorrelation.translate #(?) #TODO
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
+import statsmodels.formula.api as sm
 from scipy import stats
 from sklearn.linear_model import LogisticRegression
 
@@ -20,10 +22,13 @@ class Model(object):
     in corpus_word_dict, dict of words and nb of appearances in segmented of one algo (or freq for recall, to see; for now, nb)
     in reports_words_dict, dict of words and proportion of children understanding it at one age (or /gold w/ miss inc, to see)
     """
-    def __init__(self, corpus_words_dict, reports_words_dict):
+    def __init__(self, corpus_words_dict, reports_words_dict, regression="prop ~ np.log(word_freq)"):
 
+        self._regression = regression
         self._corpus = self.to_dataframe(corpus_words_dict, 'word_freq') #(if not already dataframe)
-        self._reports = self.to_dataframe(reports_words_dict, 'prop') #(especially for CDI, which is already in dataframe)
+        # self._reports = self.to_dataframe(reports_words_dict, 'prop') #(especially for CDI, which is already in dataframe)
+
+        self._reports = reports_words_dict
 
         self._data = self.intersect()
         # print('len', len(self._data))
@@ -31,23 +36,28 @@ class Model(object):
         self._nb_infant_by_age = 0 # needed if logistic
         self._test_size = 0
 
-        self._lin_reg = {'slope' : 0, 'intercept' : 0, 'r_value' : 0, 'r2_value' : 0, 'p_value' : 0, 'std_err' : 0}
-        self._log_reg = {'r2_value' : 0, 'std_err' : 0}
+        # self._lin_reg = {'slope' : 0, 'intercept' : 0, 'r_value' : 0, 'r2_value' : 0, 'p_value' : 0, 'std_err' : 0}
+        # self._log_reg = {'r2_value' : 0, 'std_err' : 0}
         # self._results = {}
 
-    def plot(self, annotate=False):
+    def write_data(self, filename):
+        self._data.to_csv(filename)
+
+
+    def plot(self, color='b', annotate=False):
         X = np.log(self._data['word_freq'])
         Y = self._data['prop']
-        labels=list(self._data['type'])
-        plt.scatter(X,Y)
+        labels=list(self._data['Type'])
+        plt.scatter(X,Y,color=color)
         if annotate :
             for label, x, y in zip(labels,X,Y):
                 plt.annotate(label, xy=(x,y))
 
         X_plot = np.linspace(0,max(X),1000)
-        plt.plot(X_plot, X_plot*self._lin_reg['slope'] + self._lin_reg['intercept'])
+        # print(self._lin_reg[0]['np.log(word_freq)'])
+        plt.plot(X_plot, X_plot*self._lin_reg['np.log(word_freq)'] + self._lin_reg['Intercept'], color=color)
 
-        plt.show()
+        # plt.show()
 
     def get_lin_reg(self):
         return self._lin_reg
@@ -61,11 +71,11 @@ class Model(object):
     def to_dataframe(self, data, name):
         # print(type(data))
         if (isinstance(data, pd.core.frame.DataFrame)):
-            data.columns=['type', name]
+            data.columns=['Type', name]
             # print('1, ', data.head(5))
             return data
         elif (isinstance(data, dict)) :
-            res = pd.DataFrame(list(data.items()), columns=['type', name])
+            res = pd.DataFrame(list(data.items()), columns=['Type', name])
             # print('2, ', res.head(5))
             return res
         else :
@@ -73,7 +83,7 @@ class Model(object):
             return
 
     def intersect(self):
-        res = pd.merge(self._corpus, self._reports, on='type', how='inner')
+        res = pd.merge(self._corpus, self._reports, on='Type', how='inner')
         # print(123, len(res),res.head(5))
         return res
 
@@ -83,9 +93,16 @@ class Model(object):
         Y = self._data['prop']
         # print(Y.mean())
 
-        self._lin_reg['slope'], self._lin_reg['intercept'], self._lin_reg['r_value'], \
-        self._lin_reg['p_value'], self._lin_reg['std_err'] = stats.linregress(X,Y)
-        self._lin_reg['r2_value'] = self._lin_reg['r_value']*self._lin_reg['r_value'] # r2 = r*r
+        # self._lin_reg['slope'], self._lin_reg['intercept'], self._lin_reg['r_value'], \
+        # self._lin_reg['p_value'], self._lin_reg['std_err'] = stats.linregress(X,Y)
+        # self._lin_reg['r2_value'] = self._lin_reg['r_value']*self._lin_reg['r_value'] # r2 = r*r
+
+        result = sm.ols(formula=self._regression, data=self._data).fit()
+        # print(result.rsquared)
+        self._lin_reg = result.params
+        self._lin_reg['r2_value']=result.rsquared
+        # print(self._lin_reg)
+        # print(result.summary())
 
         return self._lin_reg
 
