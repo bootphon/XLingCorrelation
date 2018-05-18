@@ -20,7 +20,12 @@ library(lmerTest)
 library(ggplot2)
 
 
+##### PATHS TO MODIFY ON YOUR COMPUTER ###########
+load("/Users/gladysbaudet/Desktop/PFE/scripts/uni_joined.Rdata")
 path = "/Users/gladysbaudet/Desktop/PFE/Results/"
+##################################################
+
+
 corpora <- c("Danish/Plunkett/", "French/Lyon/", "Spanish/OreaPine/", "Swedish/Lund/")
 algos <- c("ag/", "dibs/", "puddle/", "tp/relativeforward/", "tp/relativebackward/", "tp/absoluteforward/", "tp/absolutebackward/") #baseline0, baseline1
 units <- c("phoneme/", "syllable/")
@@ -37,7 +42,7 @@ laplace_smoothing <- function(df){
 }
 ```
 
-```{r english}
+```{r english, echo=TRUE, eval=TRUE}
 corpus <- "English/Brent/"
 lang <- "English"
 data <- c()
@@ -139,7 +144,7 @@ full_df <- merge(data, uni_joined, by=c("language", "words"))
 
 Which one ? 16 month has max average number of reports
 
-```{r merge, echo=FALSE, eval=TRUE}
+```{r merge2, echo=FALSE, eval=TRUE}
 
 data_16 <- full_df %>% 
   filter(age=='16')
@@ -267,7 +272,7 @@ summary(fit)
 
 
 
-```{r full_model?}
+```{r full_model?, eval=FALSE}
 library(lmerTest)
 fit1=lmer(prop~log(laplace_smoothing)+log(laplace_smoothing):language++log(laplace_smoothing):au + (1 | uni_lemma),data=data_16 %>% filter(measure=="understands"))
 summary(fit1)
