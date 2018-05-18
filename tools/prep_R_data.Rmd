@@ -103,7 +103,7 @@ for (corpus in corpora){
       
       # laplace smoothing here?
       new_curr[is.na(new_curr)] <- 0
-      
+      new_curr <- laplace_smoothing(new_curr)
       data <- rbind(data, new_curr)
 
     
@@ -181,7 +181,9 @@ for (a in A)
 ```
 ### Question 1
 
-```{r q1}
+One model, all languages, only gold
+
+```{r q1_all_lang.compared_gold}
 library(lmerTest)
 library(dplyr)
 q1_data <- data_16 %>% filter(au=='gold', measure=="understands")
@@ -191,18 +193,46 @@ fit_q1=lmer(prop~log(laplace_smoothing)+log(laplace_smoothing):language+(1+log(l
 summary(fit_q1)
 ```
 
+One language, only gold 
 
-```{r by_lang.by_algo.compared_gold}
+```{r by_lang.compared_gold}
 for(lang in languages){
   #lang <- "Danish"
   print(lang)
   q12_data=data_16 %>% filter(language==lang, measure=="understands", au=="gold")
   q12_data$au=factor(q12_data$au)
   q12_data$au=relevel(q12_data$au, "gold")
-  #for a in 
+
   fit_q12=lm(prop~log(laplace_smoothing), q12_data)
   print(summary(fit_q12)$r.squared)
 }
+```
+
+```{r by_lang.by_algo}
+# create table lang.algo
+
+# create au labels
+A_syll=paste(algos,"syllable/", sep="")
+A_ph=paste(algos,"phoneme/", sep="")
+A=c(A_syll, A_ph)
+A=c("gold",A)
+res <- c()
+for(lang in languages){
+  res_lang <- c()
+  for(a in A){
+    data=data_16 %>% filter(language==lang, au==a, measure=="understands")
+    fit=lm(prop~log(laplace_smoothing), data)
+    res_lang <- c(res_lang, summary(fit)$r.squared)
+  }
+  res <- c(res, res_lang)
+}
+
+res_matrix <- matrix(res, ncol=length(A), byrow = TRUE)
+colnames(res_matrix) <- A
+rownames(res_matrix) <- languages
+
+print(res_matrix)
+
 ```
 
 ```{r by_lang.all_algos}
