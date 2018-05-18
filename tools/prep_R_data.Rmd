@@ -1,0 +1,220 @@
+---
+title: "Xling analysis"
+author: "Gladys Baudet"
+date: "16/05/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Retrieve freq_words
+
+
+
+```{r freq_words, echo=FALSE, eval=TRUE}
+path = "/Users/gladysbaudet/Desktop/PFE/Results/"
+corpora <- c("Danish/Plunkett/", "French/Lyon/", "Spanish/OreaPine/", "Swedish/Lund/")
+algos <- c("ag/", "dibs/", "puddle/", "tp/relativeforward/", "tp/relativebackward/", "tp/absoluteforward/", "tp/absolutebackward/") #baseline0, baseline1
+units <- c("phoneme/", "syllable/")
+languages <- c("English (American)", "Danish", "French (Quebec)", "Spanish (Mexican)", "Swedish")
+
+laplace_smoothing <- function(df){
+  total=sum(df["count"])
+  #print(total)
+  size=nrow(df)
+  #print(size)
+  df$laplace_smoothing<-df$count+1
+  df$laplace_smoothing<-df$laplace_smoothing/(total+size)
+  return(df)
+}
+```
+
+```{r english}
+corpus <- "English/Brent/"
+lang <- "English"
+data <- c()
+
+# first, gold english
+gold = read.csv(paste(path, corpus, "gold_freq_words.csv", sep=''), sep="")
+colnames(gold) <- c("count", "words")
+gold$language <- lang
+gold$au <- "gold"
+#random choice
+#gold$unit <- "syllable"
+
+# add gold to data
+gold <- laplace_smoothing(gold)
+data <- rbind(data, gold)
+
+for (algo in algos){
+  for (unit in units){
+    # read new freq_words
+    curr = read.csv(paste(path, corpus, algo, unit, "freq-words.txt", sep=''), sep="")
+    colnames(curr) <- c("count", "words")
+    # merge with gold, keeping all words from gold (should we remove count.x ?)
+    new_curr <- merge(gold, curr, by="words", all.x=TRUE)
+    drop = c("count.x")
+    new_curr <- new_curr[, !(names(new_curr) %in% c("count.x"))]
+    names(new_curr)[names(new_curr) == 'count.y'] <- 'count'
+    new_curr$au <- paste(algo, unit, sep='')
+    #new_curr$unit <- unit
+    
+    # laplace smoothing
+    new_curr[is.na(new_curr)] <- 0
+    new_curr <- laplace_smoothing(new_curr)
+    # add to data
+    data <- rbind(data, new_curr)
+  }
+}
+
+```
+
+
+```{r other}
+for (corpus in corpora){
+  lang <- strsplit(corpus, '/')[[1]][1]
+  print(lang)
+  # read gold
+  gold = read.csv(paste(path, corpus, "gold_freq_words.csv", sep=''), sep="")
+  colnames(gold) <- c("count", "words")
+  gold$language <- lang
+  gold$au <- "gold"
+  #random choice
+  #gold$unit <- "syllable"
+  
+  #add gold
+  gold <- laplace_smoothing(gold)
+  data <- rbind(data, gold)
+  
+  for (algo in algos){
+    for (unit in units){
+      # read segmented
+      curr = read.csv(paste(path, corpus, algo, unit, "freq_words.csv", sep=''), sep="")
+      colnames(curr) <- c("count", "words")
+      #merge with gold (+remove goldcount column, rename count column)
+      new_curr <- merge(gold, curr, by="words", all.x=TRUE)
+      new_curr <- new_curr[, !(names(new_curr) %in% c("count.x"))]
+      names(new_curr)[names(new_curr) == 'count.y'] <- 'count'
+      
+      new_curr$au <- paste(algo,unit, sep='')
+      #new_curr$unit <- unit
+      
+      # laplace smoothing here?
+      new_curr[is.na(new_curr)] <- 0
+      
+      data <- rbind(data, new_curr)
+
+    
+    }
+  }
+}
+      
+      
+  
+```
+
+## Get lemma
+
+```{r lemma}
+# or not, we'll see
+
+```
+
+
+## Merge CDS/CDI
+
+Merging on type and language.
+
+```{r merge, echo=FALSE, eval=TRUE}
+
+data$language[data$language=="English"] <- "English (American)"
+data$language[data$language=="French"] <- "French (Quebec)"
+data$language[data$language=="Spanish"] <- "Spanish (Mexican)"
+full_df <- merge(data, uni_joined, by=c("language", "words"))
+
+```
+
+## Select one age
+
+Which one ? 16 month has max average number of reports
+
+```{r merge, echo=FALSE, eval=TRUE}
+library(dplyr)
+data_16 <- full_df %>% 
+  filter(age=='16')
+
+```
+
+
+## Actual analysis
+
+### Check english results
+
+```{r analysis}
+library(lme4)
+
+fit0=lm(prop~log(laplace_smoothing), data=data_16 %>% filter(language=="English (American)", au=="gold", measure=="understands"))
+summary(fit0)
+fit1=lm(prop~laplace_smoothing, data=data_16 %>% filter(language=="English (American)", au=="gold", measure=="understands"))
+#summary(fit1)
+fit2=lm(prop~count, data=data_16 %>% filter(language=="English (American)", au=="gold", measure=="understands"))
+#summary(fit2)
+fit3_b=lm(prop~log(count+1), data=data_16 %>% filter(language=="English (American)", au=="gold", measure=="understands"))
+#summary(fit3_b)
+fit3=lm(prop~log(count+1), data=data_16 %>% filter(language=="English (American)", au=="tp/relativebackward/syllable/", measure=="understands"))
+
+
+```
+
+```{r r2}
+A_syll=paste(algos,"syllable/", sep="")
+A_ph=paste(algos,"phoneme/", sep="")
+A=c(A_syll, A_ph)
+for (a in A)
+{
+  m=lm(prop~log(laplace_smoothing), data=data_16 %>% filter(language=="English (American)", au==a, measure=="understands"))
+  print(paste( a, summary(m)$r.squared, sep=" :  "))
+  }
+
+```
+### Question 1
+
+```{r q1}
+library(lmerTest)
+library(dplyr)
+q1_data <- data_16 %>% filter(au=='gold', measure=="understands")
+q1_data$language=factor(q1_data$language)
+q1_data$language=relevel(q1_data$language, "English (American)")
+fit_q1=lmer(prop~log(laplace_smoothing)+log(laplace_smoothing):language+(1+log(laplace_smoothing)|uni_lemma),q1_data)
+summary(fit_q1)
+```
+
+
+```{r by_lang.by_algo.compared_gold}
+for(lang in languages){
+  #lang <- "Danish"
+  print(lang)
+  q12_data=data_16 %>% filter(language==lang, measure=="understands", au=="gold")
+  q12_data$au=factor(q12_data$au)
+  q12_data$au=relevel(q12_data$au, "gold")
+  #for a in 
+  fit_q12=lm(prop~log(laplace_smoothing), q12_data)
+  print(summary(fit_q12)$r.squared)
+}
+```
+
+```{r by_lang.all_algos}
+
+```
+
+
+
+```{r full_model?}
+library(lmerTest)
+fit1=lmer(prop~log(laplace_smoothing)+log(laplace_smoothing):language:au + (1 | uni_lemma),data=data_16 %>% filter(measure=="understands"))
+summary(fit1)
+```
+
+
