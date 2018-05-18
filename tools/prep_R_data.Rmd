@@ -14,6 +14,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r freq_words, echo=FALSE, eval=TRUE}
+library(dplyr)
+library(lme4)
+library(lmerTest)
+library(ggplot2)
+
+
 path = "/Users/gladysbaudet/Desktop/PFE/Results/"
 corpora <- c("Danish/Plunkett/", "French/Lyon/", "Spanish/OreaPine/", "Swedish/Lund/")
 algos <- c("ag/", "dibs/", "puddle/", "tp/relativeforward/", "tp/relativebackward/", "tp/absoluteforward/", "tp/absolutebackward/") #baseline0, baseline1
@@ -115,13 +121,6 @@ for (corpus in corpora){
   
 ```
 
-## Get lemma
-
-```{r lemma}
-# or not, we'll see
-
-```
-
 
 ## Merge CDS/CDI
 
@@ -141,9 +140,14 @@ full_df <- merge(data, uni_joined, by=c("language", "words"))
 Which one ? 16 month has max average number of reports
 
 ```{r merge, echo=FALSE, eval=TRUE}
-library(dplyr)
+
 data_16 <- full_df %>% 
   filter(age=='16')
+
+data_16$language=factor(data_16$language)
+data_16$language=relevel(data_16$language, "English (American)")
+data_16$au=factor(data_16$au)
+data_16$au=relevel(data_16$au, "gold")
 
 ```
 
@@ -153,7 +157,7 @@ data_16 <- full_df %>%
 ### Check english results
 
 ```{r analysis}
-library(lme4)
+
 
 fit0=lm(prop~log(laplace_smoothing), data=data_16 %>% filter(language=="English (American)", au=="gold", measure=="understands"))
 summary(fit0)
@@ -184,8 +188,7 @@ for (a in A)
 One model, all languages, only gold
 
 ```{r q1_all_lang.compared_gold}
-library(lmerTest)
-library(dplyr)
+
 q1_data <- data_16 %>% filter(au=='gold', measure=="understands")
 q1_data$language=factor(q1_data$language)
 q1_data$language=relevel(q1_data$language, "English (American)")
@@ -208,6 +211,8 @@ for(lang in languages){
 }
 ```
 
+### Question 2 : across languages
+
 ```{r by_lang.by_algo}
 # create table lang.algo
 
@@ -220,8 +225,8 @@ res <- c()
 for(lang in languages){
   res_lang <- c()
   for(a in A){
-    data=data_16 %>% filter(language==lang, au==a, measure=="understands")
-    fit=lm(prop~log(laplace_smoothing), data)
+    data_cur=data_16 %>% filter(language==lang, au==a, measure=="understands")
+    fit=lm(prop~log(laplace_smoothing), data_cur)
     res_lang <- c(res_lang, summary(fit)$r.squared)
   }
   res <- c(res, res_lang)
@@ -230,20 +235,41 @@ for(lang in languages){
 res_matrix <- matrix(res, ncol=length(A), byrow = TRUE)
 colnames(res_matrix) <- A
 rownames(res_matrix) <- languages
+res_matrix <- data.frame(t(res_matrix))
 
-print(res_matrix)
+print((res_matrix))
 
 ```
 
 ```{r by_lang.all_algos}
 
+#for (lang in languages){
+lang="Swedish"
+    data_cur <- data_16 %>% filter(language==lang, measure=="understands")
+    fit <- lm(prop~log(laplace_smoothing)+log(laplace_smoothing):au, data_cur)
+    summary(fit)
+#}
+
 ```
+
+
+
+```{r}
+lang="Spanish (Mexican)"
+#for(lang in languages) {
+data_cur <- full_df %>% filter(age==13, au %in% c("gold", "tp/relativeforward/syllable/"), language==lang, measure=="understands")
+fit <- lm(prop~log(laplace_smoothing)+log(laplace_smoothing)*au, data_cur)
+summary(fit)
+
+#}
+```
+
 
 
 
 ```{r full_model?}
 library(lmerTest)
-fit1=lmer(prop~log(laplace_smoothing)+log(laplace_smoothing):language:au + (1 | uni_lemma),data=data_16 %>% filter(measure=="understands"))
+fit1=lmer(prop~log(laplace_smoothing)+log(laplace_smoothing):language++log(laplace_smoothing):au + (1 | uni_lemma),data=data_16 %>% filter(measure=="understands"))
 summary(fit1)
 ```
 
