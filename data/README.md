@@ -11,15 +11,6 @@ Basically, what is done here is in three steps :
     - no more error => success ! A syllabified corpus !
   - still some cleaning to do due to syll script (add ;eword, ;esyll, ...)
 
-## TODO
-
-[x] upload data french
-
-[x] upload clean data french
-
-[ ] upload script used to get clean data (+steps and all)
-
-[ ] organize in language/corpus/
 
 ## Summary of corpora and CDI data
 
