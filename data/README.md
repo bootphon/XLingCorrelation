@@ -21,6 +21,10 @@ Basically, what is done here is in three steps :
 
 [ ] organize in language/corpus/
 
+## Summary of corpora and CDI data
+
+https://docs.google.com/spreadsheets/d/1glaH9zcTbcX9FOCBt2N55-Paj8YpvJLzWosgG8Bcpco/edit?usp=sharing
+
 ## From .cha file
 - Cleaning - using cha2sel2clean.sh
   - cha2sel.sh
