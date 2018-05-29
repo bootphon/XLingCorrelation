@@ -13,7 +13,7 @@ These tools are used to process CDS corpora. These corpora are downloaded from [
     
     TODO: 
     
-    [] replace by all .cha, add an option to get specific ages
+    [ ] replace by all .cha, add an option to get specific ages
 
 2. Get orthographic lines (select lines from adults, remove tags); out file: ortholines.txt
 
@@ -55,7 +55,7 @@ These tools are used to process CDS corpora. These corpora are downloaded from [
 
      - Build naive onset list (for now on phono, could be on dict of language; only recovers word-initial onsets)
   
-    `getOnsets.py path/to/phono/file/in_which/to_identify/onsets/phono_transcripts.txt path/to/output/folder/onsets.txt path/to/language/consonants.txt`
+    `getOnsets.py path/to/phono_transcripts.txt path/to/output/folder/onsets.txt path/to/language/consonants.txt`
     
      - Syllabify (wordseg-syllabify; incremental ie solving problems one by one -unfound onset, words composed only of consonants, unknown phone- )
   
