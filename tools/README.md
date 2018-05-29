@@ -1,7 +1,7 @@
 # Tools
 
 
-These tools are used to process CDS corpora. These corpora are downloaded from [CHILDES](https://childes.talkbank.org), which regroup a set of files in CHAT format; these are the files we work with.
+These tools are used to process CDS corpora. These corpora are downloaded from [CHILDES](https://childes.talkbank.org), which regroups a set of files in CHAT format; these are the files we work with.
 
 ## Preprocessing steps
 
@@ -21,19 +21,19 @@ These tools are used to process CDS corpora. These corpora are downloaded from [
 
 4. Syllabify
 
-  - Get set of consonants phones and set of vowels phones from the languages (create language-vowels.txt and language-consonants.txt)
+     - Get set of consonants phones and set of vowels phones from the languages (create language-vowels.txt and language-consonants.txt)
   
     `getVowelsConsonants.py`
 
-  - Check that all phones of phono are in either one list or the other (/!\ NOT DONE YET /!\)
+     - Check that all phones of phono are in either one list or the other (/!\ NOT DONE YET /!\)
   
   
 
-  - Build naive onset list (for now on phono, could be on dict of language; only recovers word-initial onsets)
+     - Build naive onset list (for now on phono, could be on dict of language; only recovers word-initial onsets)
   
     `getOnsets.py`
     
-  - Syllabify (wordseg-syllabify; incremental ie solving problems one by one -unfound onset, words composed only of consonants, unknown phone- )
+     - Syllabify (wordseg-syllabify; incremental ie solving problems one by one -unfound onset, words composed only of consonants, unknown phone- )
   
   (put here different scripts to clean the different corpora, one by corpus)
 
