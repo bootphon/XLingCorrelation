@@ -13,7 +13,7 @@ These tools are used to process CDS corpora. These corpora are downloaded from [
     
     TODO: 
     
-    [ ] replace by all .cha, add an option to get specific ages
+    [] replace by all .cha, add an option to get specific ages
 
 2. Get orthographic lines (select lines from adults, remove tags); out file: ortholines.txt
 
