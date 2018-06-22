@@ -11,15 +11,10 @@ Basically, what is done here is in three steps :
     - no more error => success ! A syllabified corpus !
   - still some cleaning to do due to syll script (add ;eword, ;esyll, ...)
 
-## TODO
 
-[x] upload data french
+## Summary of corpora and CDI data
 
-[x] upload clean data french
-
-[ ] upload script used to get clean data (+steps and all)
-
-[ ] organize in language/corpus/
+https://docs.google.com/spreadsheets/d/1glaH9zcTbcX9FOCBt2N55-Paj8YpvJLzWosgG8Bcpco/edit?usp=sharing
 
 ## From .cha file
 - Cleaning - using cha2sel2clean.sh
