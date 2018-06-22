@@ -22,15 +22,21 @@ library(ggplot2)
 
 ##### PATHS TO MODIFY ON YOUR COMPUTER ###########
 load("/Users/gladysbaudet/Desktop/PFE/scripts/uni_joined.Rdata")
+load("/Users/gladysbaudet/Desktop/PFE/CDI/uni_joined_no_slash.Rdata")
+
 path = "/Users/gladysbaudet/Desktop/PFE/Results/"
 ##################################################
 
 
 corpora <- c("Danish/Plunkett/", "French/Lyon/", "Spanish/OreaPine/", "Swedish/Lund/")
-algos <- c("ag/", "dibs/", "puddle/", "tp/relativeforward/", "tp/relativebackward/", "tp/absoluteforward/", "tp/absolutebackward/") #baseline0, baseline1
+algos <- c("ag/", "dibs/", "puddle/", "tp/relativeforward/", "tp/relativebackward/", "tp/absoluteforward/", "tp/absolutebackward/", "baseline0/", "baseline1/") #baseline0, baseline1
 units <- c("phoneme/", "syllable/")
-languages <- c("English (American)", "Danish", "French (Quebec)", "Spanish (Mexican)", "Swedish")
+#languages <- c("English (American)", "Danish", "French (French)", "Spanish (European)", "Swedish")
+languages <- c("English (American)", "Danish", "French (French)", "Spanish (European)", "Swedish")
 
+```
+
+```{r laplace}
 laplace_smoothing <- function(df){
   total=sum(df["count"])
   #print(total)
@@ -60,6 +66,7 @@ gold <- laplace_smoothing(gold)
 data <- rbind(data, gold)
 
 for (algo in algos){
+  print(algo)
   for (unit in units){
     # read new freq_words
     curr = read.csv(paste(path, corpus, algo, unit, "freq-words.txt", sep=''), sep="")
@@ -100,6 +107,7 @@ for (corpus in corpora){
   data <- rbind(data, gold)
   
   for (algo in algos){
+    print(algo)
     for (unit in units){
       # read segmented
       curr = read.csv(paste(path, corpus, algo, unit, "freq_words.csv", sep=''), sep="")
@@ -127,17 +135,189 @@ for (corpus in corpora){
 ```
 
 
+## Statistics on CDI
+Number of words per report in each language
+
+```{r cdi-stats}
+
+for (lang in languages){
+  cdi_lang <- uni_joined %>% filter(language==lang, age==12, measure=="understands")
+  print(lang)
+  print(nrow(cdi_lang))
+}
+
+```
+
+Age at which mean number of reports is higher
+
+```{r cdi-stats2}
+for (a in seq(8,18,2)){
+  s=0
+  for (lang in languages){
+    cdi_lang <- uni_joined %>% filter(language==lang, age==a, measure=="understands")
+    s <- s+cdi_lang$num_false[1]+cdi_lang$num_true[1]
+    
+  }
+  print(paste(a,s,sep="  "))
+  print(s)
+}
+
+```
+
+Number of reports and mean understanding at chosen age
+```{r cdi-stats3}
+
+  for (lang in languages){
+    cdi_lang <- uni_joined %>% filter(language==lang, age==12, measure=="understands")
+    print(lang)
+    print(paste(cdi_lang$num_false[1]+cdi_lang$num_true[1], mean(cdi_lang$prop), sep="  "))
+  }
+
+
+```
+
+### Compare CDI (Quebec/France, Mexico/Spain)
+
+```{r load_words}
+fr = read.csv("/Users/gladysbaudet/Desktop/PFE/CDI/french/full_cdi_WG.csv")
+sp = read.csv("/Users/gladysbaudet/Desktop/PFE/CDI/spanish/full_cdi_WG.csv")
+fr <- fr %>% filter(age==12, type=="word")
+sp <- sp %>% filter(age==12, type=="word")
+```
+
+```{r compare_words}
+fr_words$words <- unique(fr$definition)
+fr_words$words2 <- unique(fr$definition)
+sp_words$words <- unique(sp$definition)
+
+fr_aoa <- uni_joined %>% filter(language=="French (Quebec)", measure=="understands", age==12)
+sp_aoa <- uni_joined %>% filter(language=="Spanish (Mexican)", measure=="understands", age==12)
+
+
+
+fr_inter <- merge(fr_words[c("words","words2")], fr_aoa[c("words","lexical_classes")], by="words", all.y=TRUE)
+
+fr_inter2 <- merge(fr_words, fr_aoa, by="words")
+sp_inter <- merge(sp_words, sp_aoa, by="words")
+
+
+
+print(paste("fr", "local",length(fr_words$words), "aoa", nrow(fr_aoa), "inter", nrow(fr_inter2), sep=" "))
+print(paste("sp", "local",length(sp_words$words), "aoa", nrow(sp_aoa), "inter", nrow(sp_inter), sep=" "))
+```
+
+
+## Using other CDI (uni_joined for English, Danish, Swedish, other for French, Spanish)
+
+```{r sep_/}
+dup_rows <- function(df){
+  to_modif <- df[grep("/", df$words),]
+  to_modif <- rbind(to_modif, df[grep(",", df$words),])
+  to_modif <- rbind(to_modif, df[grep("(.*)", df$words),])
+  to_modif_new <- c()
+  
+  for (i in 1:nrow(to_modif)){
+    
+    row <- to_modif[i,]
+    if(i==1){
+      print(row[["words"]])
+    }
+    word <- as.character(row[["words"]])
+    word <- unlist(strsplit(word, "/"))[1]
+    word <- unlist(strsplit(word, ","))[1]
+    word <- unlist(strsplit(word, "[(]"))[1]
+    new_row1 <- row
+    #new_row2 <- row
+    new_row1["words"] <- word
+    #new_row2["words"] <- word[2]
+    if(i==1){
+      print(new_row1)
+    }
+    to_modif_new <- rbind(to_modif_new,new_row1)
+    #to_modif_new <- rbind(to_modif_new,new_row2)
+  }
+  
+  df_res <- anti_join(df, to_modif, c("language", "words", "age"))
+  df_res <- rbind(df_res, to_modif_new)
+  df_res <- df_res[df_res$words!="",]
+  return(df_res)
+}
+```
+
+Clean AOA CDI in English, Danish and Swedish
+
+```{r clean_cdi_en_da_sw}
+
+en_da_sw <- uni_joined[c("language", "age", "prop", "measure", "words")]
+en_da_sw <- en_da_sw %>% filter(language %in% c("English (American)", "Danish", "Swedish"), measure=="understands")
+en_da_sw <- en_da_sw[c("language", "age", "prop", "words")]
+
+en_da_sw_clean <- dup_rows(en_da_sw)
+
+
+```
+
+Retrieve data in Spanish (European) and French (French)
+
+```{r sp_fr}
+fr <- read.csv("/Users/gladysbaudet/Desktop/PFE/CDI/french/WG_prop_French_FR.csv")
+## rename columns
+names(fr)[names(fr) == 'Type'] <- 'words'
+fr <- fr[c("age", "prop", "words")]
+fr$language <- "French (French)"
+
+sp <- read.csv("/Users/gladysbaudet/Desktop/PFE/CDI/spanish/WG_prop_Spanish_European.csv")
+## rename columns
+names(sp)[names(sp) == 'Type'] <- 'words'
+sp <- sp[c("age", "prop", "words")]
+sp$language <- "Spanish (European)"
+
+sp_fr <- rbind(sp, fr)
+
+
+
+sp_fr <- sp_fr[c("language", "age", "prop", "words")]
+sp_fr_clean <- dup_rows(sp_fr)
+
+```
+
+Join both
+
+```{r join_cdi}
+cdi_all <- rbind(en_da_sw_clean, sp_fr_clean)
+
+```
+
 ## Merge CDS/CDI
 
 Merging on type and language.
 
 ```{r merge, echo=FALSE, eval=TRUE}
 
-data$language[data$language=="English"] <- "English (American)"
-data$language[data$language=="French"] <- "French (Quebec)"
-data$language[data$language=="Spanish"] <- "Spanish (Mexican)"
-full_df <- merge(data, uni_joined, by=c("language", "words"))
+#data$language[data$language=="English"] <- "English (American)"
+#data$language[data$language=="French"] <- "French (French)"
+#data$language[data$language=="Spanish"] <- "Spanish (European)"
+#cds_data <- data
+#full_df <- merge(data, uni_joined, by=c("language", "words"))
+#full_df_new <- merge(data, uni_joined_new, by=c("language", "words"))
 
+load("/Users/gladysbaudet/Desktop/PFE/scripts/cds_res.Rdata")
+data$language[data$language=="English"] <- "English (American)"
+data$language[data$language=="French (Quebec)"] <- "French (French)"
+data$language[data$language=="Spanish (Mexican)"] <- "Spanish (European)"
+cds_data <- data
+
+mixed_df <- merge(data, cdi_all, by=c("language","words"))
+mixed_df$au = factor(mixed_df$au)
+mixed_df$language = factor(mixed_df$language)
+mixed_df$au = relevel(mixed_df$au, "gold")
+mixed_df$language = relevel(mixed_df$language, "English (American)")
+
+```
+
+```{r save}
+save(cds_data, file="/Users/gladysbaudet/Desktop/PFE/scripts/cds_res.Rdata")
+save(mixed_df, file="/Users/gladysbaudet/Desktop/PFE/scripts/all_res.Rdata")
 ```
 
 ## Select one age
@@ -207,16 +387,117 @@ One language, only gold
 for(lang in languages){
   #lang <- "Danish"
   print(lang)
-  q12_data=data_16 %>% filter(language==lang, measure=="understands", au=="gold")
+  #q12_data=data_16 %>% filter(language==lang, measure=="understands", au=="gold")
+  #q12_data <- full_df %>% filter(language==lang, measure=="understands", au=="gold", age==12)
+  q12_data <- mixed_df %>% filter(language==lang, au=="gold", age==13)
+  print(nrow(q12_data))
   q12_data$au=factor(q12_data$au)
-  q12_data$au=relevel(q12_data$au, "gold")
+  #q12_data$au=relevel(q12_data$au, "gold")
 
   fit_q12=lm(prop~log(laplace_smoothing), q12_data)
   print(summary(fit_q12)$r.squared)
 }
 ```
 
+Using duplicated rows
+
+```{r duprows}
+#data_q13 <- full_df_new %>% filter(age==12, au=="tp/relativeforward/syllable/", measure=="understands")
+data_q13 <- mixed_df %>% filter(age==12, au=="baseline0/syllable/")
+for(lang in languages){
+  print(lang)
+  cur_dat <- data_q13 %>% filter(language==lang)
+  print(nrow(cur_dat))
+  fit_q13 <- lm(prop~log(laplace_smoothing), cur_dat)
+  print(summary(fit_q13)$r.squared)
+  plot(log(cur_dat$laplace_smoothing), cur_dat$prop, xlab="freq", ylab="prop", main=lang)
+  abline(lm(prop ~ log(laplace_smoothing), cur_dat))
+}
+```
+
+Using mixed df
+
+```{r todo}
+
+```
+
 ### Question 2 : across languages
+
+
+Using mixed df - get all R2 (! age may change between languages !)
+```{r todo2}
+
+A_syll=paste(algos,"syllable/", sep="")
+A_ph=paste(algos,"phoneme/", sep="")
+A=c(A_syll, A_ph)
+A=c("gold",A)
+R2_res <- c()
+
+for (lang in languages){
+  print(lang)
+  for (a in A){
+    #print(a)
+    for (aa in seq(11,15)){
+      u <- unlist(strsplit(a, "/"))
+      uu <- u[[length(u)]]
+      algo <- u[[1]]
+      if(length(u)>2){
+        algo <- paste(u[[1]], u[[2]], sep='/')
+      }
+      data_cur <- mixed_df %>% filter(au==a, language==lang, age==aa) # AGE !!#
+      fit = lm(prop~log(laplace_smoothing), data_cur)
+      R2_res <- rbind(R2_res, c(lang, a, as.numeric(as.character(summary(fit)$r.squared)), algo, uu, aa))
+    }
+  }
+}
+
+R2_res <- as.data.frame(R2_res)
+names(R2_res)[names(R2_res) == 'V1'] <- 'language'
+names(R2_res)[names(R2_res) == 'V2'] <- 'au'
+names(R2_res)[names(R2_res) == 'V3'] <- 'r2_score'
+names(R2_res)[names(R2_res) == 'V4'] <- 'algo'
+names(R2_res)[names(R2_res) == 'V5'] <- 'unit'
+names(R2_res)[names(R2_res) == 'V6'] <- 'age'
+
+R2_res$r2_score <- as.numeric(as.character(R2_res$r2_score))
+
+R2_res$algo <- as.character(R2_res$algo)
+R2_res$algo[R2_res$algo=="tp/absolutebackward"] <- ".BTPa"
+R2_res$algo[R2_res$algo=="tp/absoluteforward"] <- ".FTPa"
+R2_res$algo[R2_res$algo=="tp/relativebackward"] <- ".BTPr"
+R2_res$algo[R2_res$algo=="tp/relativeforward"] <- ".FTPr"
+R2_res$algo[R2_res$algo=="baseline0"] <- "b0"
+R2_res$algo[R2_res$algo=="baseline1"] <- "b1"
+
+```
+
+```{r table_display_r2}
+for (lang in language){
+  for(u in units){
+    for(a in algos){
+      
+    }
+  }
+}
+```
+
+
+```{r save_r2_res}
+
+save(R2_res, file="/Users/gladysbaudet/Desktop/PFE/CDI/xling_r2_res.Rdata")
+```
+
+
+```{r display_r2}
+
+ggplot(R2_res %>% filter(age==14), aes( x=algo, y=r2_score, color=language, shape=unit))+
+  #geom_bar(stat="identity")+
+  geom_point()+
+  facet_grid(~language, scales="fixed")+
+theme(axis.text.x=element_text(angle = -50, hjust = 0))
+  
+
+```
 
 ```{r by_lang.by_algo}
 # create table lang.algo
@@ -249,7 +530,7 @@ print((res_matrix))
 ```{r by_lang.all_algos}
 
 #for (lang in languages){
-lang="Swedish"
+lang="Danish"
     data_cur <- data_16 %>% filter(language==lang, measure=="understands")
     fit <- lm(prop~log(laplace_smoothing)+log(laplace_smoothing):au, data_cur)
     summary(fit)
@@ -260,10 +541,10 @@ lang="Swedish"
 
 
 ```{r}
-lang="Spanish (Mexican)"
+lang="English (American)"
 #for(lang in languages) {
 data_cur <- full_df %>% filter(age==13, au %in% c("gold", "tp/relativeforward/syllable/"), language==lang, measure=="understands")
-fit <- lm(prop~log(laplace_smoothing)+log(laplace_smoothing)*au, data_cur)
+fit <- lm(prop~log(count+1)+log(count+1):au, data_cur)
 summary(fit)
 
 #}
@@ -277,5 +558,14 @@ library(lmerTest)
 fit1=lmer(prop~log(laplace_smoothing)+log(laplace_smoothing):language++log(laplace_smoothing):au + (1 | uni_lemma),data=data_16 %>% filter(measure=="understands"))
 summary(fit1)
 ```
+
+
+
+
+
+
+
+
+
 
 

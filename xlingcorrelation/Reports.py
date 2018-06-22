@@ -14,15 +14,16 @@ class Reports(object):
         self._age_max = 0
         self._age_range = self.age_range()
 
-        self._function_words = self.select_function_words()
-        self._content_words = self.select_content_words()
-        # self._func_0 = self.modif_func_0()
-
-        self._reports_by_age = [self.select_df(age)[['Type', 'prop', 'lexical_classes']] for age in self.age_range()]
-        self._reports_by_age_function = [self.select_df(age,self._function_words)[['Type', 'prop', 'lexical_classes']] for age in self.age_range()]
-        self._reports_by_age_content = [self.select_df(age,self._content_words)[['Type', 'prop', 'lexical_classes']] for age in self.age_range()]
+        # self._function_words = self.select_function_words()
+        # self._content_words = self.select_content_words()
+        # # self._func_0 = self.modif_func_0()
+        #
+        # self._reports_by_age = [self.select_df(age)[['Type', 'prop', 'lexical_classes']] for age in self.age_range()]
+        self._reports_by_age = [self.select_df(age)[['Type', 'prop']] for age in self.age_range()]
+        # self._reports_by_age_function = [self.select_df(age,self._function_words)[['Type', 'prop', 'lexical_classes']] for age in self.age_range()]
+        # self._reports_by_age_content = [self.select_df(age,self._content_words)[['Type', 'prop', 'lexical_classes']] for age in self.age_range()]
         # self._dict_word_freq = {} # really going from dataframe to dict to dataframe ? or dataframe from beginning ?
-        # self._word_freq = self._reports[['Type', 'prop']]
+        self._word_freq = self._reports[['Type', 'prop']]
         # self._reports_by_age_func_0 = [self.select_df(age, self._func_0)[['Type', 'prop', 'lexical_classes']] for age in self.age_range()]
 
         self._form = path_cdi_prop.split('_')[1] #WG, WS
