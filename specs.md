@@ -5,8 +5,7 @@ Considering we need results for
 - different sizes of the same corpus
 - different children of the same corpus
 - different age ranges of the same corpus
-- different sizes of the same corpus
-- different measures? only WG comp for now
+- _different measures? only WG comp for now_
 
 r2_measure_unit:
 - index: algos
@@ -15,10 +14,11 @@ r2_measure_unit:
 ## Architecture
 
 ### Data
+/!\ **names have to be aammdd.cha !!!** /!\ (not the case in Lyon)
 
 *in lang/corpus/*
-- cha_files
-- full_corpus/ortholines.txt, phono.txt, gold.txt, tags.txt, prepared_phoneme.txt, prepared_syllables.txt
+- cha_files: ordered as child/age.cha
+- full_corpus/selected.txt, ortholines.txt, phono.txt, gold.txt, tags.txt, prepared_phoneme.txt, prepared_syllables.txt
 - by_child/child_name/*same as in full_corpus*
 - by_age/age/*same as in full_corpus*
 
