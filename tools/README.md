@@ -71,7 +71,7 @@ These tools are used to process CDS corpora. These corpora are downloaded from [
 
 5. Insert word/syllable/phoneme tags (-p ' ' -s ';esyll' -w ';eword')
 
-   `cleaning_post_syll.sh`
+   `cleaning_post_syll.sh file_to_clean.txt output.txt`
   
 6. Create grammars (both phone and syllable, can also be done by wordseg)
 
