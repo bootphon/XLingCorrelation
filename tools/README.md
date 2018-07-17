@@ -37,6 +37,10 @@ These tools are used to process CDS corpora. These corpora are downloaded from [
     
     Uses eSpeak and bootphon/phonemizer (can be run only if right environment installed - ok on local server)
     
+    OR
+    
+    `phono_by_file.sh path/to/folder/to/phono/ language`
+    
     TODO:
     
     [ ] make it usable by external people (?)
