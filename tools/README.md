@@ -65,7 +65,7 @@ These tools are used to process CDS corpora. These corpora are downloaded from [
     
      - Syllabify (wordseg-syllabify; incremental ie solving problems one by one -unfound onset, words composed only of consonants, unknown phone- ; don't put -p '' (use an inexistent character))
      
-     `wordseg-syll phono_to_syllabify.txt ../onsets.txt ../vowels.txt -p '_' -w ' ' > syllabified.txt`
+     `wordseg-syll phono_to_syllabify.txt ../onsets.txt ../vowels.txt -p '_' -w ' ' -t > syllabified.txt 2> errors.txt`
   
     TODO:
     
