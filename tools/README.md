@@ -82,4 +82,9 @@ These tools are used to process CDS corpora. These corpora are downloaded from [
    `phone_dic.py`
   
    `syllable_dic.py`
+   
+   
+   
+   
+/!\ for russian, max onset principal not working (ex: jj not an onset, but sjj is), + words without vowels exist (c = from, pronounced 's')
 
