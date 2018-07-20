@@ -86,5 +86,5 @@ These tools are used to process CDS corpora. These corpora are downloaded from [
    
    
    
-/!\ for russian, max onset principal not working (ex: jj not an onset, but sjj is), + words without vowels exist (c = from, pronounced 's')
+/!\ for russian, max onset principal not working (ex: jj not an onset, but sjj is), + words without vowels exist (c = from, pronounced 's', some consonants are not onsets on their own (l))
 
