@@ -37,6 +37,10 @@ These tools are used to process CDS corpora. These corpora are downloaded from [
     
     Uses eSpeak and bootphon/phonemizer (can be run only if right environment installed - ok on local server)
     
+    OR
+    
+    `phono_by_file.sh path/to/folder/to/phono/ language`
+    
     TODO:
     
     [ ] make it usable by external people (?)
@@ -59,20 +63,28 @@ These tools are used to process CDS corpora. These corpora are downloaded from [
   
     `getOnsets.py path/to/phono_transcripts.txt path/to/output/folder/onsets.txt path/to/language/consonants.txt`
     
-     - Syllabify (wordseg-syllabify; incremental ie solving problems one by one -unfound onset, words composed only of consonants, unknown phone- )
+     - Syllabify (wordseg-syllabify; incremental ie solving problems one by one -unfound onset, words composed only of consonants, unknown phone- ; don't put -p '' (use an inexistent character))
+     
+     `wordseg-syll phono_to_syllabify.txt ../onsets.txt ../vowels.txt -p '_' -w ' ' -t > syllabified.txt 2> errors.txt`
   
     TODO:
     
     [ ] put here different scripts to clean the different corpora, one by corpus
+    
     [ ] do not forget to remove word/utterance from ortholines if removed from gold !!!
 
 5. Insert word/syllable/phoneme tags (-p ' ' -s ';esyll' -w ';eword')
 
-   `cleaning_post_syll.sh`
+   `cleaning_post_syll.sh file_to_clean.txt output.txt`
   
 6. Create grammars (both phone and syllable, can also be done by wordseg)
 
    `phone_dic.py`
   
    `syllable_dic.py`
+   
+   
+   
+   
+/!\ for russian, max onset principal not working (ex: jj not an onset, but sjj is), + words without vowels exist (c = from, pronounced 's', some consonants are not onsets on their own (l))
 
