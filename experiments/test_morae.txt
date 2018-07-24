@@ -1,0 +1,1 @@
+Counter({'ku': 4, 'oq': 3, 'da': 3, 'de': 3, 'nyuu': 3, 'joo': 2, 'sha': 2, 'tsu': 2, 'ko': 2, 'sai': 2, 'ho': 2, 'ra': 2, 'yo': 2, 'no': 2, 'chuu': 2, 'sa': 2, 'su': 1, 'hai': 1, 'nai': 1, 'tte': 1, 'to': 1, 'ma': 1, 'tchi': 1, 'aq': 1, 'ki': 1, 'roo': 1, 'ga': 1, 'a': 1, 'mi': 1, 'n': 1, 'ne': 1, 'ka': 1, 'ta': 1, 'mba': 1, 'soo': 1})
