@@ -1,7 +1,7 @@
 import sys
 from collections import Counter
 
-## python get_morae.py ortho.txt tags.txt
+## python clean_jap.py ortho.txt tags.txt
 
 # 1. Read file
 # 2. Split on spaces (by word)
