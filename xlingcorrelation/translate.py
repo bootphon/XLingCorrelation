@@ -17,7 +17,7 @@ import pandas as pd
 
 
 
-def build_phono_to_ortho(gold, ortho):
+def build_phono_to_ortho(gold, ortho, debug=True):
     """
     Dictionnary from phono text to ortho text
     # open ortho and gold file and check if in each line, the number of words match
@@ -26,11 +26,16 @@ def build_phono_to_ortho(gold, ortho):
     """
     count_errors = 0
     d=collections.defaultdict(dict)
-    for line_phono, line_ortho in izip(gold, ortho):
-        line_phono = line_phono.lower().split()
-        line_ortho = line_ortho.lower().split()
+    i=0
+    for line_phono_init, line_ortho_init in izip(gold, ortho):
+        i+=1
+        line_phono = line_phono_init.lower().split()
+        line_ortho = line_ortho_init.lower().split()
         if len(line_phono) != len(line_ortho):
             count_errors += 1
+            if debug:
+                print("Error at line "+str(i)+" :")
+                print("phono: "+line_phono_init+"ortho: "+line_ortho_init)
         else:
             for word_phono, word_ortho in izip(line_phono, line_ortho):
                 count_freq = d[word_phono]

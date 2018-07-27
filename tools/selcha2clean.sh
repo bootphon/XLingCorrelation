@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # cleaning up selected lines from cha files in prep to generating a phono format
-# Alex Cristia alecristia@gmail.com 2015-10-26
 LC_CTYPE=C
 #########VARIABLES
 #Variables that have been passed by the user

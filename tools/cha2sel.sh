@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # SELECTING speakers from cha files in prep to generating a phono format
 # IMPORTANT!! Includes data selection
-# Alex Cristia alecristia@gmail.com 2015-10-26
 
 #########VARIABLES
 #Variables that have been passed by the user

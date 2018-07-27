@@ -1,6 +1,7 @@
 import numpy as np
 from xlingcorrelation import Model, Reports
 import pandas as pd
+import matplotlib.pyplot as plt
 
 class ListModels(object):
     """
@@ -27,8 +28,14 @@ class ListModels(object):
         self._df = pd.DataFrame(columns=self._columns)
 
     def plot_regression(self, i, j):
-        self._results[i,j].plot()
+        self._results[i,j].plot(annotate=True)
+        plt.xlabel("log(well segmented occurrences of this word)", fontweight='bold')
+        plt.ylabel("proportion of children reported to understand this word", fontweight='bold')
+        plt.show()
 
+    def plot_all(self):
+        self._df[['R2','algo']].plot()
+        plt.show()
 
     def compute(self):
         """
