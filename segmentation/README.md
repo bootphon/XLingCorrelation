@@ -10,6 +10,15 @@ The tag files have to be in CDS/language/corpus\_name/  ; the architecture creat
 
 Output is segmented corpus by different algos+corresponding evaluation
 
+ag[number].sh is what was used to segment selected portion of the Brent corpus
+
+
+### run_all.sh
+
++ $1 : path/to/dir/containing/tags/
++ $2 : path/to/phone_grammar.lt
++ $3 : path/to/syllable_grammar.lt
+
 ### create\_archi.sh
 + $1 : path/to/dir/to/create/
 RES : the right architecture for following scripts to store their results
