@@ -31,7 +31,7 @@ Can (or can't) phonologize and syllabify (which languages ? -none for now, excep
 
 ### Segmented.py
 _Given segmented, ortho, gold_
-+ Get dict from phono to ortho (build it rather from CDI ? Cheating lil bit)
++ Get dict from phono to ortho (rather build it from CDI ?)
 
 + Nb/list of words, syllables, phones
 + Freq_top, freq_words, write these in files
