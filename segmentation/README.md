@@ -1,6 +1,14 @@
+## Tools
 
+### count_phono.py
 
-## Global architecture
+Counts and sorts the phones appearing in a phonologized corpus
+
+### to_freq.sh
+
+builds freqtop for each segmented file
+
+## Global segmentation architecture
 
 run\_all.sh creates the right architecture to store the results, prepares the tags (in phones or syllables) and the summary for dibs, and calls run\_algo.sh for each algo. 
 In turn, each run\_algo.sh calls algo.sh with different arguments - most of the time, different units, but sometimes other parameters (example : TP, AGu)
