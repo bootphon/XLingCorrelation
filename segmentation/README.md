@@ -6,7 +6,7 @@ Counts and sorts the phones appearing in a phonologized corpus
 
 ### to_freq.sh
 
-builds freqtop for each segmented file
+builds freqtop for each segmented file /!\ uses local path
 
 ## Global segmentation architecture
 
