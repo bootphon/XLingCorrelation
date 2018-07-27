@@ -1,3 +1,5 @@
+
+
 ## Global architecture
 
 run\_all.sh creates the right architecture to store the results, prepares the tags (in phones or syllables) and the summary for dibs, and calls run\_algo.sh for each algo. 
@@ -77,4 +79,4 @@ calls baseline on tags.txt, outputs the segmentation in the right place and the 
 
 ### tp.sh
 
-
+# PATHS PROBABLY HAVE TO BE CHANGED
