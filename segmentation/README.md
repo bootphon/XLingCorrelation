@@ -1,8 +1,12 @@
 ## Global architecture
-run\_all.sh creates the right architecture to store the results, prepares the tags and the summary for dibs, and calls run\_algo.sh for each algo. 
+
+run\_all.sh creates the right architecture to store the results, prepares the tags (in phones or syllables) and the summary for dibs, and calls run\_algo.sh for each algo. 
 In turn, each run\_algo.sh calls algo.sh with different arguments - most of the time, different units, but sometimes other parameters (example : TP, AGu)
+
 Each script can be run separately.
 The tag files have to be in CDS/language/corpus\_name/  ; the architecture creation will be done in Results/language/corpus\_name (you need an existing Results/language/ directory) 
+
+Output is segmented corpus by different algos+corresponding evaluation
 
 ### create\_archi.sh
 + $1 : path/to/dir/to/create/
@@ -74,16 +78,3 @@ calls baseline on tags.txt, outputs the segmentation in the right place and the 
 ### tp.sh
 
 
-## Grammar creation
-
-### syllable\_dic.py
-
-+ $1 : path/to/tags.txt
-+ $2 : other/way/grammar/Colloc0syll\_en\_corpus.lt
-RES : other/way/grammar/Colloc0syll\_en\_corpus.lt in which syllable grammar
-
-Advice : have a grammar/ directory to store the grammars (+ grammars/language/ ?)
-
-## CDS cleaning
-
-### phonologize
